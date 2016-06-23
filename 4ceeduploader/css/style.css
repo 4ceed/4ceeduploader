@@ -1,0 +1,88 @@
+.container {
+	width:800px;
+}
+
+.expand {
+	width:300px;
+}
+
+.blue {
+	background:blue;
+}
+
+.error {
+	color:red;
+}
+
+.jumbotron {
+	padding:17px;
+}
+
+.focusedInput {
+    border-color: rgba(82,168,236,.8);
+    outline: 0;
+    outline: thin dotted \9;
+    -moz-box-shadow: 0 0 8px rgba(82,168,236,.6);
+    box-shadow: 0 0 8px rgba(82,168,236,.6) !important;
+}	
+
+.tooltip-inner {
+/*    max-width: 350px;
+     If max-width does not work, try using width instead 
+    width: 350px; */
+    font-size: 120%; 
+}
+
+.validCollection {
+    display:none;
+    color:red;
+    font-weight: bold;
+}
+
+.padTop {
+    padding-top:10px;
+}
+
+.labelPadLeft {
+    padding-left:117px; 
+}
+
+.ui-autocomplete {
+  max-height: 150px;
+  overflow-y: auto;
+  /* prevent horizontal scrollbar */
+  overflow-x: hidden;
+}
+/* IE 6 doesn't support max-height
+ * we use height instead, but this forces the menu to always be this tall
+ */
+* html .ui-autocomplete {
+  height: 150px;
+}
+
+.glyphicon {
+  position: relative;
+  top: 2px;
+  display: inline-block;
+  font-family: 'Glyphicons Halflings';
+  -webkit-font-smoothing: antialiased;
+  font-style: normal;
+  font-weight: normal;
+  line-height: 1;
+}
+
+.hidden {
+  display:none;
+}
+.caps 
+{
+    text-transform:capitalize;
+}
+
+.top-buffer { 
+  margin-top:10px; 
+}
+
+.popover-title{
+    background: #dbeaf5;
+}

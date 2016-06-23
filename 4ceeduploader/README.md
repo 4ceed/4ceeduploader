@@ -1,0 +1,1 @@
+This is a feature branch setup to try and integrate the jsTree library with our nested collections. The hope is to be able to represent JSON data as virtual directories for a user to select, rather then having multiple chained dropdown menus
