@@ -841,13 +841,13 @@ function postRootCollection(collectionID, rootFlag) {
 			// $("#fileSubmit").hide("slow"); 
 		}, 
 		error: function(xhr, status, error) {
-			swal({
-			  title: "Error", 
-			  text: "There was a problem setting the collection as root",
-			  type: "error",
-			  timer: 1500,
-			  showConfirmButton: false
-			});
+			// swal({
+			//   title: "Error", 
+			//   text: "There was a problem setting the collection as root",
+			//   type: "error",
+			//   timer: 1500,
+			//   showConfirmButton: false
+			// });
 		}	
 	})
 } 
