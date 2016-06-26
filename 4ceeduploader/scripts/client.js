@@ -437,7 +437,7 @@ function getTemplate(id){
 //Load Previous Datasets
 function getPreviousDatasets(){
 	$.ajax({
-		url: baseURL+"t2c2/getKeyValuesForLastDatasets  ",
+		url: baseURL+"t2c2/getKeyValuesForLastDatasets",
 		type:"GET", 
 		dataType: "json",
 		beforeSend: function(xhr){
@@ -446,6 +446,7 @@ function getPreviousDatasets(){
         	xhr.setRequestHeader("Authorization", "Basic " + btoa(username + ":" + password));
 		}, 
 		success: function(data){
+			// console.log(data);
 			showPreviousDatasets(data); 
 		}, 
 		error: function(xhr, status, error) {
@@ -557,7 +558,7 @@ function createBoxes(data){
 	$.each(data.terms, function(key, val) {
         var div = $("<div />");
         div.html(createDiv(val.key, val.default_value));
-        $(".templateData").append(div);
+        $("#custMenu .templateData").append(div);
 	}); 
 }
 
@@ -568,11 +569,12 @@ function createBoxesForPreviousDataset(data){
   	$("#btnTemplate").show();
   	$(".otherOptions").show();
 
-	$.each(data[0], function(keyName, val) {
-        var div = $("<div />");
-        div.html(createDiv(keyName, val));
-        $(".templateData").append(div);
+	$.each(data.terms, function(i, val) {
+		var div = $("<div />");
+		div.html(createDiv(val.key, val.default_value));
+		$(".templateData").append(div);
 	}); 
+
 }
 
 function clearTemplate(){
@@ -677,11 +679,6 @@ function postTemplate(e) {
     e.stopPropagation();
 
 	var templateTerms = buildTemplate(); 
-	// templateTerms = "[" + templateTerms + "]";
-	// console.log(templateTerms);
-	// var terms1 = [{"key":"SEM", "default_value":"20"},{"key":"TEM", "default_value":"30"}];
-
-	var terms = [{"key":"aa","default_value":"1"},{"key":"bb","default_value":"2"}]	;
    	var tab = $('.tab-content');
    	var active = tab.find('.tab-pane.active');
 	var templateName = active.find('.datasetName').val();
@@ -968,10 +965,12 @@ function postDatasets() {
    	var tab = $('.tab-content');
    	var active = tab.find('.tab-pane.active');
 	var datasetName = active.find('.datasetName').val();
+	var menuName = $('.nav-tabs .active > a').attr("href");
 
-	var datasetDescription = buildStr(); 
+	var datasetDescription = buildStr(menuName); 
     var currentNodeId = jQuery("#collections").jstree("get_selected");
-	
+
+
 	$.ajax({
 		url:clowderURL+"datasets/createempty",
 		type:"POST", 
@@ -1254,9 +1253,9 @@ $("#formGetCollections").validate({
 });
 
 //Build string of metadata from dynamic textboxes
-function buildStr() {
-		var keys = $.map($('#custMenu .metaDataKey'), function (el) { return el.value; });
-		var values = $.map($('#custMenu .metaDataVal'), function (el) {return el.value;}); 
+function buildStr(menuName) {
+		var keys = $.map($(menuName + ' ' + '.metaDataKey'), function (el) { return el.value; });
+		var values = $.map($(menuName + ' ' + '.metaDataVal'), function (el) {return el.value;}); 
 		var arrayCombined = []; 
 		$.each(keys, function (idx, val) {
 
@@ -1312,7 +1311,6 @@ $(function() {
 	});
 
 });
-
 
 function getAllTags(){
 
