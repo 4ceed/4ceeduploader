@@ -209,16 +209,22 @@
 											</div>
 										</div>
 										<hr />
+								    	<div class="tagData">
+											<label>Template Name:</label>
+
+											<select class="form-control tagTemplates">
+											</select>
+											<br />
+								    	</div>										
 										<div class="otherOptions">
 											<label>Choose a name for your dataset:</label>
 											<input type="text" class="form-control datasetName" placeholder="Example... Sample Name, PECVD Oxide, Diffusion" required><br />
 											<input type="button" value="Add New Field" class="btn btn-success btnAdd"/>	
 									    	<button type="button" class="clearTemplate btn btn-danger">Clear Template</button><br />
 									    	<hr />
-								    	
 								    	</div>
-										<div class="metaDataSettings">
 
+										<div class="metaDataSettings">
 										</div>	
 										<div class="templateData">
 											<!--Template boxes will be added here -->

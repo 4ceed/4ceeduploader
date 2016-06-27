@@ -419,8 +419,9 @@ function getTemplate(id){
         	xhr.setRequestHeader("Authorization", "Basic " + btoa(username + ":" + password));
 		}, 
 		success: function(data){
-			// console.log(data);
 			createBoxes(data); 
+			// $(".tagData").hide(); 
+
 		}, 
 		error: function(xhr, status, error) {
 			swal({
@@ -495,49 +496,81 @@ function showTemplates(data) {
 	$(".templates").focus(); 	
 }
 
-// function getTemplatesByTag(){
-// 	$.ajax({
-// 		///t2c2/templates/findByTag/thisIsTheTag	
-// 		url: "http://127.0.0.1:9000/t2c2/templates/findByTag/test",
-// 		// url: baseURL+"t2c2/templates/findbyTag/",
-
-// 		type:"GET", 
-// 		dataType: "json",
-// 		beforeSend: function(xhr){
-// 			xhr.setRequestHeader("Content-Type", "application/json"); 
-// 			xhr.setRequestHeader("Accept", "application/json");
-//         	xhr.setRequestHeader("Authorization", "Basic " + btoa(username + ":" + password));
-// 		}, 
-// 		success: function(data){
-// 			console.log(data);
-// 		}, 
-// 		error: function(xhr, status, error) {
-// 			swal({
-// 			  title: "Error", 
-// 			  text: "There was a problem returning custom templates",
-// 			  type: "error",
-// 			  timer: 1500,
-// 			  showConfirmButton: false
-// 			});
-// 		}	
-
-// 	})	
-// }
-
 //Load user templates
 function showGlobalTemplates(templatesData) {
-
 	$.each(templatesData, function(key, val) {
 		$(".globalTemplates").append($("<option class='placeholder'></option>").val(val.id).html(val.name));
 	}); 
 
 	$(".globalTemplates").focus(); 	
-
 }
 
-//Load user templates
-function showPreviousDatasets(data) {
+function showTagTemplates(data){
 
+	$('<option>').val('').text('--Select One--').appendTo('.tagTemplates');
+
+	$.each(data, function(key, val) {
+		$(".tagTemplates").append($("<option class='placeholder'></option>").val(val.template_id).html(val.name));
+	}); 
+	
+	$(".tagTemplates").focus(); 	
+}
+
+function getAllTags(){
+
+	var url = baseURL+"t2c2/templates/allTags";
+	$.ajax({
+		url: url,
+		type:"GET", 
+		beforeSend: function(xhr){
+			xhr.setRequestHeader("Content-Type", "application/json"); 
+			xhr.setRequestHeader("Accept", "application/json");
+			xhr.setRequestHeader("Authorization", "Basic " + btoa(username + ":" + password));
+		}, 
+		success: function(data){
+
+			//Format the object by removing whitespace, duplicates, and capitalize characters. 
+			var showUserTags = data.join(","); 
+			var allCapsTags = showUserTags.toUpperCase(); 
+			var trimTags = $.map(allCapsTags.split(","), $.trim);
+			var uniqueTags = jQuery.unique(trimTags);	
+			$(".templateSearch").autocomplete({
+				source: uniqueTags,
+				select: function (event, ui) {
+					$(".tagTemplates").empty(); 
+					$(".tagData").show(); 
+
+					 var selectedObj = ui.item;  
+					 getByTagId(selectedObj.value);
+				}, 
+				change: function( event, ui ) {
+				}				
+			}); 
+		}
+
+	}); 
+}
+
+function getByTagId(tagId){
+	var url = baseURL+"t2c2/getIdNameFromTag/"+tagId+"";
+	$.ajax({
+		url: url,
+		type:"GET", 
+		beforeSend: function(xhr){
+			xhr.setRequestHeader("Content-Type", "application/json"); 
+			xhr.setRequestHeader("Accept", "application/json");
+			xhr.setRequestHeader("Authorization", "Basic " + btoa(username + ":" + password));
+		}, 
+		success: function(data){
+			$(".tagData").show(); 
+			$(".otherOptions").hide(); 
+			showTagTemplates(data);		
+		}
+
+	}); 
+}
+
+function showPreviousDatasets(data) {
 	$('<option>').val('').text('--Select One--').appendTo('.prevTemplates');
 
 	$.each(data, function(key, val) {
@@ -545,7 +578,6 @@ function showPreviousDatasets(data) {
 	}); 
 	
 	$(".prevTemplates").focus(); 	
-
 }
 
 function createBoxes(data){
@@ -555,11 +587,22 @@ function createBoxes(data){
   	$("#btnTemplate").show();
   	$(".otherOptions").show();
 
+  	//Get current tab and use name to determine what the label will say based on it's tab
+  	var menuName = $('.nav-tabs .active > a').attr("href");
+
+	var txt = ""; 
+	if (menuName == "#custMenu"){
+		txt = 1; 
+	}else{
+		txt = 0; 
+	}
+
 	$.each(data.terms, function(key, val) {
         var div = $("<div />");
-        div.html(createDiv(val.key, val.default_value));
-        $("#custMenu .templateData").append(div);
+        div.html(createDiv(val.key, val.default_value, txt));
+        $(menuName + ' ' + ".templateData").append(div);
 	}); 
+
 }
 
 function createBoxesForPreviousDataset(data){
@@ -571,7 +614,7 @@ function createBoxesForPreviousDataset(data){
 
 	$.each(data.terms, function(i, val) {
 		var div = $("<div />");
-		div.html(createDiv(val.key, val.default_value));
+		div.html(createDiv(val.key, val.default_value, 1));
 		$(".templateData").append(div);
 	}); 
 
@@ -581,14 +624,15 @@ function clearTemplate(){
 	$(".templateData").empty();
 	$(".metaDataSettings").empty();
 	$(".otherOptions").hide();
-
 	$(".btnDataset").hide();
 	$("#btnTemplate").hide();
 	$(".templates").focus(); 
 	$(".templates").val("");
 	$(".prevTemplates").val("");
 	$(".globalTemplates").val("");
-	$(".templateSearch").val(""); 
+	// $(".templateSearch").val(""); 
+	$(".tagTemplates").val(""); 
+	$(".tagData").empty(); 
 }
 
 //Run when the clear template button is clicked
@@ -608,7 +652,7 @@ $(".custMenu, .createMenu, .prevMenu").click(function(){
 	$(".templates").empty(); 
 	$(".globalTemplates").empty(); 
 	$(".prevTemplates").empty(); 	
-
+	$(".tagTemplates").empty(); 
 	$("#btnTemplate").hide();
 	$('<option>').val('').text('--Select One--').appendTo('.templates');
 	$('<option>').val('').text('--Select One--').appendTo('.globalTemplates');
@@ -654,9 +698,13 @@ $(".prevTemplates").change(function(){
 	}
 });
 
-// $(".templateSearch").click(function(){
-// 	getTemplatesByTag(); 
-// });
+$(".tagTemplates").change(function(){
+	var id = $(this).val(); 
+
+	if (id != ''){
+		getTemplate(id);
+	}
+});
 
 $(".clearMenu").click(function(){
 	$(".btnDataset").show();
@@ -682,7 +730,7 @@ function postTemplate(e) {
    	var tab = $('.tab-content');
    	var active = tab.find('.tab-pane.active');
 	var templateName = active.find('.datasetName').val();
-	var tagName = $('.tagName').val(); 
+	var tagName = $('.tagName').val().toUpperCase(); 
 	var shareTemplate = $('#checkShareTemplate').is(":checked");
 	$.ajax({
 		url: baseURL+"t2c2/templates/createExperimentTemplateFromJson?isPublic="+shareTemplate+"",
@@ -710,7 +758,7 @@ function postTemplate(e) {
 			$("#btnTemplate").hide();
 			$(".datasetName").val(''); 
 			$(".tagName").val(''); 
-
+			$('#checkShareTemplate').prop('checked', false); 
 			$('<option>').val('').text('--Select One--').appendTo('.templates');
 			$('<option>').val('').text('--Select One--').appendTo('.globalTemplates');
 
@@ -827,6 +875,7 @@ function postCollections() {
 	})
 } 
 
+//Deprecating route soon. No longer necessary in api
 //Set collection to root
 function postRootCollection(collectionID, rootFlag) {	
 
@@ -837,16 +886,8 @@ function postRootCollection(collectionID, rootFlag) {
         	xhr.setRequestHeader("Authorization", "Basic " + btoa(username + ":" + password));
 		}, 
 		success: function(data){
-			// $("#fileSubmit").hide("slow"); 
 		}, 
 		error: function(xhr, status, error) {
-			// swal({
-			//   title: "Error", 
-			//   text: "There was a problem setting the collection as root",
-			//   type: "error",
-			//   timer: 1500,
-			//   showConfirmButton: false
-			// });
 		}	
 	})
 } 
@@ -963,7 +1004,6 @@ function postNestedCollectionToCollection(collectionID, nestedCollectionID) {
 
 //Create NEW dataset
 function postDatasets() {
-
    	var tab = $('.tab-content');
    	var active = tab.find('.tab-pane.active');
 	var datasetName = active.find('.datasetName').val();
@@ -971,7 +1011,6 @@ function postDatasets() {
 
 	var datasetDescription = buildStr(menuName); 
     var currentNodeId = jQuery("#collections").jstree("get_selected");
-
 
 	$.ajax({
 		url:clowderURL+"datasets/createempty",
@@ -1170,7 +1209,7 @@ $(function(){
 
 });
 
-//Validate the entire form and rererlection/dataset/file
+//Validate the entire form and submit collection/dataset/file
 $("#btnSubmit").on('click', function() {
 	$("#datasets").removeAttr('disabled');
 	$(".datasetName").addClass("required");
@@ -1194,7 +1233,7 @@ $("#btnSubmit").on('click', function() {
 	if ($("#formGetDatasets").valid()){
 
 		//was a dataset selected or created? 
-		//this has to be done first before a fileload, since we need the datasetid
+		//This has to be done first before a fileload, since we need the datasetid
 		if (setDatasetID != '' && setDatasetID != null){
 			$(".alert").hide(); 
 			comments = $(".fileComments");
@@ -1266,12 +1305,10 @@ function buildStr(menuName) {
 		    	arrayCombined.push(val + " : " + values[idx]);
 			}
 		});
-
 		return(arrayCombined.join("\n"));
 }
 
 function buildTemplate() {
-
 		var metaDataKeys = $.map($('#createMenu .metaDataKey'), function (el) { return el.value; });
 		var metaDataVals = $.map($('#createMenu .metaDataVal'), function (el) {return el.value;}); 
 		var arr = []; 
@@ -1313,38 +1350,9 @@ $(function() {
 	});
 
 	getAllTags(); 
+	$(".tagData").hide(); 
 
 });
-
-function getAllTags(){
-
-	var url = baseURL+"t2c2/templates/allTags";
-	$.ajax({
-		url: url,
-		type:"GET", 
-		beforeSend: function(xhr){
-			xhr.setRequestHeader("Content-Type", "application/json"); 
-			xhr.setRequestHeader("Accept", "application/json");
-			xhr.setRequestHeader("Authorization", "Basic " + btoa(username + ":" + password));
-		}, 
-		success: function(data){
-
-			//Format the object by removing whitespace, duplicates, and capitalize characters. 
-			var showUserTags = data.join(","); 
-			var allCapsTags = showUserTags.toUpperCase(); 
-			var trimTags = $.map(allCapsTags.split(","), $.trim);
-			var uniqueTags = jQuery.unique(trimTags);	
-			$(".templateSearch").autocomplete({
-				source: uniqueTags,
-				select: function (event, ui) {
-					// getAllTags(); 
-
-				}				
-			}); 
-		}
-
-	}); 
-}
 
 //Auto create and remove textboxes for custom dataset settings
 $(function () {
@@ -1414,16 +1422,23 @@ $('.search-input').keydown(function (e) {
 });
 
 //Create dynmiac textbox
-function createDiv(keyName,val) {
+function createDiv(keyName,val, txt) {
 		var valKeyName = jQuery.trim(keyName);
 		var valStr = jQuery.trim(val);
+		var txtToWrite = "";  
+		if (txt == 1){
+			txtToWrite = "Value: ";
+		}else{
+			txtToWrite = "Default Value: (optional)";
+		}
+
 	    return '<div class="row top-buffer"><div class="col-xs-5"><b>' + "<label for='name'>Name: " + '</label></b></span>' +
     		'<input class="metaDataKey form-control" id="name" type="text" value=' + valKeyName.replace(/ /g,"&nbsp;") +'></div>' + 
 
     		// '<div class="col-xs-2" style="margin-left:-15px;"><b>' + "<label for='val'>Unit: " + '</label></b>' +
     		// '<input class="metaDataVal form-control" type="text" id="val"></div>'  + 
 
-    		'<div class="col-xs-5" style="margin-left:-15px;"><b>' + "<label for='val'>Default Value (optional): " + '</label></b>' +
+    		'<div class="col-xs-5" style="margin-left:-15px;"><b>' + "<label for='val'>"+txtToWrite + '</label></b>' +
     		'<input class="metaDataVal form-control" type="text" id="val" value=' + valStr.replace(/ /g,"&nbsp;") +'></div>' + 
 
     		'<div class="col-xs-1" style="margin-left:-15px;"><b>' + "<label for='val'>&nbsp;" + '</label></b>' +
