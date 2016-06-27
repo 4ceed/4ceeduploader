@@ -762,6 +762,8 @@ function postCollections() {
 			$('#collapse1').collapse('show');
 
  			var newCollectionID = data.id
+
+ 			//This is going to be deprecated soon 6/16
 			postRootCollection(data.id, true);
 
 			//recreate tree	
@@ -1310,6 +1312,8 @@ $(function() {
 		source: availableTags
 	});
 
+	getAllTags(); 
+
 });
 
 function getAllTags(){
@@ -1324,11 +1328,14 @@ function getAllTags(){
 			xhr.setRequestHeader("Authorization", "Basic " + btoa(username + ":" + password));
 		}, 
 		success: function(data){
-			globalTemplates = data; 
-			// console.log(data);
 
+			//Format the object by removing whitespace, duplicates, and capitalize characters. 
+			var showUserTags = data.join(","); 
+			var allCapsTags = showUserTags.toUpperCase(); 
+			var trimTags = $.map(allCapsTags.split(","), $.trim);
+			var uniqueTags = jQuery.unique(trimTags);	
 			$(".templateSearch").autocomplete({
-				source: globalTemplates,
+				source: uniqueTags,
 				select: function (event, ui) {
 					// getAllTags(); 
 
