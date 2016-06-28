@@ -544,6 +544,7 @@ function getAllTags(){
 					 getByTagId(selectedObj.value);
 				}, 
 				change: function( event, ui ) {
+
 				}				
 			}); 
 		}
@@ -615,7 +616,7 @@ function createBoxesForPreviousDataset(data){
 	$.each(data.terms, function(i, val) {
 		var div = $("<div />");
 		div.html(createDiv(val.key, val.default_value, 1));
-		$(".templateData").append(div);
+		$("#prevMenu .templateData").append(div);
 	}); 
 
 }
@@ -630,9 +631,9 @@ function clearTemplate(){
 	$(".templates").val("");
 	$(".prevTemplates").val("");
 	$(".globalTemplates").val("");
-	// $(".templateSearch").val(""); 
+	$(".templateSearch").val(""); 
 	$(".tagTemplates").val(""); 
-	$(".tagData").empty(); 
+	$(".tagData").hide(); 
 }
 
 //Run when the clear template button is clicked

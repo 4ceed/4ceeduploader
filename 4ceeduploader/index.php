@@ -202,7 +202,7 @@
 														<select class="globalTemplates form-control"></select>
 													</div>
 													<div class="col-sm-4">
-														<label>Template Search:</label><br />											
+														<label>Template Tag Search:</label><br />											
 														<input class="form-control templateSearch" type="text" placeholder="Search by name or tag">
 													</div>
 												</div>
