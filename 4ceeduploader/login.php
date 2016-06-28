@@ -90,13 +90,13 @@
 			//Listener for button click or enter key press
 			$("#btnLogin").on("click", function(){
 				
-				var clowderURL = "http://127.0.0.1:9000/api/"; 
-				var baseURL = "http://127.0.0.1:9000/"; 
-				var homeURL = "http://127.0.0.1:8888/4ceeduploader/";
+				// var clowderURL = "http://127.0.0.1:9000/api/"; 
+				// var baseURL = "http://127.0.0.1:9000/"; 
+				// var homeURL = "http://127.0.0.1:8888/4ceeduploader/";
 
-				// var clowderURL = "http://192.17.237.26:9000/api/"; 
-				// var baseURL = "http://192.17.237.26:9000/"; 
-				// var homeURL = "http://192.17.237.26:8888"; 
+				var clowderURL = "http://192.17.237.26:8000/api/"; 
+				var baseURL = "http://192.17.237.26:8000/"; 
+				var homeURL = "http://192.17.237.26:7777/4ceeduploader"; 
 
 				var username = $("#username").val(); 
 				var password = $("#password").val(); 
