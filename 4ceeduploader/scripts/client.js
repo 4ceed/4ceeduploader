@@ -657,6 +657,7 @@ $(".custMenu, .createMenu, .prevMenu").click(function(){
 	$("#btnTemplate").hide();
 	$('<option>').val('').text('--Select One--').appendTo('.templates');
 	$('<option>').val('').text('--Select One--').appendTo('.globalTemplates');
+	$(".tagData").hide(); 
 
 	$(".metaDataSettings").empty(); 	
 	$(".templateData").empty(); 
