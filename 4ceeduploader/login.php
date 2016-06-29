@@ -95,9 +95,10 @@
 				// var homeURL = "http://127.0.0.1:8888/4ceeduploader/";
 
 				//server settings 
-				var clowderURL = "https://4ceed.illinois.edu:8000/api/"; 
-				var baseURL = "https://4ceed.illinois.edu:8000/"; 
-				var homeURL = "https://4ceed.illinois.edu:7777/4ceeduploader"; 
+				//change back to https
+				var clowderURL = "http://4ceed.illinois.edu:8000/api/"; 
+				var baseURL = "http://4ceed.illinois.edu:8000/"; 
+				var homeURL = "http://4ceed.illinois.edu:7777/4ceeduploader"; 
 				// var baseURL = "http://192.17.176.162:9000/"; 
 				// var homeURL = "http://192.17.176.162:8888"; 
 
