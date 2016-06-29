@@ -94,9 +94,12 @@
 				// var baseURL = "http://127.0.0.1:9000/"; 
 				// var homeURL = "http://127.0.0.1:8888/4ceeduploader/";
 
-				var clowderURL = "http://192.17.237.26:8000/api/"; 
-				var baseURL = "http://192.17.237.26:8000/"; 
-				var homeURL = "http://192.17.237.26:7777/4ceeduploader"; 
+				//server settings 
+				var clowderURL = "https://4ceed.illinois.edu:8000/api/"; 
+				var baseURL = "https://4ceed.illinois.edu:8000/"; 
+				var homeURL = "https://4ceed.illinois.edu:7777/4ceeduploader"; 
+				// var baseURL = "http://192.17.176.162:9000/"; 
+				// var homeURL = "http://192.17.176.162:8888"; 
 
 				var username = $("#username").val(); 
 				var password = $("#password").val(); 
