@@ -6,7 +6,7 @@
 	
 	//Redirect user if sessions are not found
 	if ($_SESSION['username'] == "" || $_SESSION['password'] == ""){
-		header('Location: login.php'); 
+		header('Location: /login.php'); 
 	}
 ?>
 
