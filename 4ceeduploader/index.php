@@ -20,16 +20,16 @@
 		<title>T2C2</title>
 
 		<!-- Bootstrap -->
-		<link rel="stylesheet" href="bootstrap/css/bootstrap.min.css">
+		<link rel="stylesheet" href="4ceeduploader/bootstrap/css/bootstrap.min.css">
 		<!-- Optional theme -->
-		<link rel="stylesheet" href="bootstrap/css/bootstrap-theme.min.css">
-		<link rel="stylesheet" href="jquery-ui/css/jquery-ui.css">		
+		<link rel="stylesheet" href="4ceeduploader/bootstrap/css/bootstrap-theme.min.css">
+		<link rel="stylesheet" href="4ceeduploader/jquery-ui/css/jquery-ui.css">		
 		
- 		<link rel="stylesheet" href="sweetalert/css/sweetalert.css">
-  		<link rel="stylesheet" href="css/style.css">		
-  		<link rel="stylesheet" href="jquery-upload/css/uploadfile.css">		
-		<link rel="stylesheet" href="jstree/themes/default/style.min.css" />
-  		<link rel="stylesheet" href="select2/css/select2.css">		
+ 		<link rel="stylesheet" href="4ceeduploader/sweetalert/css/sweetalert.css">
+  		<link rel="stylesheet" href="4ceeduploader/css/style.css">		
+  		<link rel="stylesheet" href="4ceeduploader/jquery-upload/css/uploadfile.css">		
+		<link rel="stylesheet" href="4ceeduploader/jstree/themes/default/style.min.css" />
+  		<link rel="stylesheet" href="4ceeduploader/select2/css/select2.css">		
 
  		<!--[if lt IE 9]>
 		  <script src="bootstrap/js/html5shiv.min.js"></script>
@@ -38,7 +38,7 @@
 		<script>
 		  //If user opens another identical tab, redirect them back to login
 		  if (sessionStorage.length == 0){ 
-		  	window.location.href = "login.php";				
+		  	window.location.href = "4ceeduploader/login.php";				
 		  }
 		</script>
 	</head>
@@ -47,8 +47,8 @@
 		<div class="header clearfix">
 			<nav>
 				<ul class="nav nav-pills pull-right">
-					<li role="presentation" class="active"><a href="faq.php">FAQ</a></li>
-					<li role="presentation"><a href="logout.php">Logout</a></li>
+					<li role="presentation" class="active"><a href="4ceeduploader/faq.php">FAQ</a></li>
+					<li role="presentation"><a href="4ceeduploader/logout.php">Logout</a></li>
 				</ul>
 			</nav>
  			<h3 class="text-muted username"></h3>
@@ -330,19 +330,19 @@
 	</div><!-- container --> 
 
 	<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-	<script src="jquery/js/jquery.min.js"></script>
-	<script src="jquery-ui/js/jquery-ui.js"></script>
+	<script src="4ceeduploader/jquery/js/jquery.min.js"></script>
+	<script src="4ceeduploader/jquery-ui/js/jquery-ui.js"></script>
 	<!-- Include all compiled plugins (below), or include individual files as needed -->
 	<!-- Latest compiled and minified JavaScript -->
-	<script src="bootstrap/js/bootstrap.min.js"></script>
-	<script src="jquery-validate/js/jquery.validate.min.js"></script>	
-	<script src="select2/js/select2.js"></script>	
-	<script src="jquery-idle-timeout-master/src/jquery.idletimer.js"></script>
-	<script src="jquery-idle-timeout-master/src/jquery.idletimeout.js"></script>
-	<script src="scripts/client.js"></script>
-	<script src="jquery-upload/js/jquery.uploadfile.js"></script>
-	<script src="sweetalert/js/sweetalert-dev.min.js"></script>	
-	<script src="jstree/jstree.js"></script>	   
+	<script src="4ceeduploader/bootstrap/js/bootstrap.min.js"></script>
+	<script src="4ceeduploader/jquery-validate/js/jquery.validate.min.js"></script>	
+	<script src="4ceeduploader/select2/js/select2.js"></script>	
+	<script src="4ceeduploader/jquery-idle-timeout-master/src/jquery.idletimer.js"></script>
+	<script src="4ceeduploader/jquery-idle-timeout-master/src/jquery.idletimeout.js"></script>
+	<script src="4ceeduploader/scripts/client.js"></script>
+	<script src="4ceeduploader/jquery-upload/js/jquery.uploadfile.js"></script>
+	<script src="4ceeduploader/sweetalert/js/sweetalert-dev.min.js"></script>	
+	<script src="4ceeduploader/jstree/jstree.js"></script>	   
 	</body>
 </html>
 
