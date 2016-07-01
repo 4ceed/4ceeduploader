@@ -70,7 +70,7 @@
 		<form id="formGetCollections" class="" method="get" action="" name="clientForm">
 			<div class="jumbotron">
 				<div class="form-group colPanel">
-					<img src="images/one.jpg" width="50px">
+					<img src="4ceeduploader/images/one.jpg" width="50px">
 					<label style="padding-left:10px;">Choose a collection...</label>
 					<span><a style="font-height:12px;" href="#" data-toggle="popover" title="Collections" data-trigger="hover" data-content="A logical container used to describe a parent/child level project, experiment, process, or sample." title=" ">what's this?</a></span>	
 				</div>				
@@ -135,7 +135,7 @@
 		<form id="formGetDatasets" class="hidden" method="get" action="">
 		<div class="jumbotron">
 			<div class="form-group dsPanel" >
-				<img src="images/two.jpg" width="50px">
+				<img src="4ceeduploader/images/two.jpg" width="50px">
 				<label style="padding-left:10px;">Choose a dataset...</label>
 				<span><a style="font-height:12px;" href="#" data-toggle="popover" title="Datasets" data-trigger="hover" data-content="A logical container that describes samples, processes, and techniques that produce meta-data." title=" ">what's this?</a></span>	
 			</div>				
@@ -313,7 +313,7 @@
 		<div id="fileSubmit" class="hidden">
 			<div class="jumbotron ">
 				<div class="form-group">
-					<img src="images/three.jpg" width="50px">
+					<img src="4ceeduploader/images/three.jpg" width="50px">
 					<label style="padding-left:10px;">Click browse or drag and drop files..</label>
 				</div>
 				<div id="mulitplefileuploader">Browse</div>
