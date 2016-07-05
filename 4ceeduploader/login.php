@@ -96,9 +96,9 @@
 
 				//server settings 
 				//change back to https
-				var clowderURL = "http://4ceed.illinois.edu:8000/api/"; 
-				var baseURL = "http://4ceed.illinois.edu:8000/"; 
-				var homeURL = "http://4ceed.illinois.edu:7777/4ceeduploader"; 
+				var clowderURL = "https://4ceed.illinois.edu:8000/api/"; 
+				var baseURL = "https://4ceed.illinois.edu:8000/"; 
+				var homeURL = "https://4ceed.illinois.edu:7777/4ceeduploader"; 
 			
 
 
