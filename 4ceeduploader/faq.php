@@ -47,7 +47,7 @@
 	<div class="header clearfix">
 		<nav>
 			<ul class="nav nav-pills pull-right">
-				<li role="presentation" class="active"><a href="https://4ceed.illinois.edu/4ceeduploader/">Uploader</a></li>
+				<li role="presentation" class="active"><a href="4ceeduploader/">Uploader</a></li>
 				<li role="presentation"><a href="/logout.php">Logout</a></li>
 			</ul>
 		</nav>
