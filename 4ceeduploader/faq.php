@@ -47,8 +47,8 @@
 	<div class="header clearfix">
 		<nav>
 			<ul class="nav nav-pills pull-right">
-				<li role="presentation" class="active"><a href="index.php">Client</a></li>
-				<li role="presentation"><a href="logout.php">Logout</a></li>
+				<li role="presentation" class="active"><a href="4ceeduploader/index.php">Client</a></li>
+				<li role="presentation"><a href="4ceeduploader/logout.php">Logout</a></li>
 			</ul>
 		</nav>
 
