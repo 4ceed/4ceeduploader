@@ -1434,7 +1434,7 @@ function createDiv(keyName,val, txt) {
 			txtToWrite = "Default Value: (optional)";
 		}
 
-	    return '<div class="row top-buffer"><div class="col-xs-5"><b>' + "<label for='name'>Name: " + '</label></b></span>' +
+	    return '<div class="row top-buffer"><div class="col-xs-6"><b>' + "<label for='name'>Name: " + '</label></b></span>' +
     		'<input class="metaDataKey form-control" id="name" type="text" value=' + valKeyName.replace(/ /g,"&nbsp;") +'></div>' + 
 
     		// '<div class="col-xs-2" style="margin-left:-15px;"><b>' + "<label for='val'>Unit: " + '</label></b>' +
@@ -1442,6 +1442,10 @@ function createDiv(keyName,val, txt) {
 
     		'<div class="col-xs-5" style="margin-left:-15px;"><b>' + "<label for='val'>"+txtToWrite + '</label></b>' +
     		'<input class="metaDataVal form-control" type="text" id="val" value=' + valStr.replace(/ /g,"&nbsp;") +'></div>' + 
+
+    		// '<div class="col-xs-3" style="margin-left:-15px;"><b>' + "<label for='val'>Description: " + '</label></b>' +
+    		// '<input class="metaDataVal form-control" type="text" id="val"></div>'  + 
+
 
     		'<div class="col-xs-1" style="margin-left:-15px;"><b>' + "<label for='val'>&nbsp;" + '</label></b>' +
     		'<input type="button" value="Remove" class="remove btn btn-danger"></div></div>' 
