@@ -44,7 +44,8 @@
 			<div class="alert alert-danger" role="alert" style="display:none;" id="displayMsg">
 				<span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
 				<span class="sr-only">Error:</span>
-				User not authorized
+				User not authorized. <br />
+				Please create an account, or if this is your first time please accept the terms of service by logging in to the <a href="https://4ceed.illinois.edu">curator.</a>
 			</div>				
 			<div class="jumbotron">
 				<form method="" id="formLogin" action="">
@@ -91,14 +92,14 @@
 			$("#btnLogin").on("click", function(){
 				
 				//LOCAL
-				// var clowderURL = "http://127.0.0.1:9000/api/"; 
-				// var baseURL = "http://127.0.0.1:9000/"; 
-				// var homeURL = "http://127.0.0.1:8888/4ceeduploader/";
+				var clowderURL = "http://127.0.0.1:9000/api/"; 
+				var baseURL = "http://127.0.0.1:9000/"; 
+				var homeURL = "http://127.0.0.1:8888/4ceeduploader/";
 			
 				//REMOTE
-				var clowderURL = "https://4ceed.illinois.edu/api/"; 
-				var baseURL = "https://4ceed.illinois.edu/"; 
-				var homeURL = "https://4ceed.illinois.edu/4ceeduploader"; 
+				// var clowderURL = "https://4ceed.illinois.edu/api/"; 
+				// var baseURL = "https://4ceed.illinois.edu/"; 
+				// var homeURL = "https://4ceed.illinois.edu/4ceeduploader"; 
 			
 				var username = $("#username").val(); 
 				var password = $("#password").val(); 
