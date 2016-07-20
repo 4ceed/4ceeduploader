@@ -92,14 +92,14 @@
 			$("#btnLogin").on("click", function(){
 				
 				//LOCAL
-				var clowderURL = "http://127.0.0.1:9000/api/"; 
-				var baseURL = "http://127.0.0.1:9000/"; 
-				var homeURL = "http://127.0.0.1:8888/4ceeduploader/";
+				// var clowderURL = "http://127.0.0.1:9000/api/"; 
+				// var baseURL = "http://127.0.0.1:9000/"; 
+				// var homeURL = "http://127.0.0.1:8888/4ceeduploader/";
 			
 				//REMOTE
-				// var clowderURL = "https://4ceed.illinois.edu/api/"; 
-				// var baseURL = "https://4ceed.illinois.edu/"; 
-				// var homeURL = "https://4ceed.illinois.edu/4ceeduploader"; 
+				var clowderURL = "https://4ceed.illinois.edu/api/"; 
+				var baseURL = "https://4ceed.illinois.edu/"; 
+				var homeURL = "https://4ceed.illinois.edu/4ceeduploader"; 
 			
 				var username = $("#username").val(); 
 				var password = $("#password").val(); 

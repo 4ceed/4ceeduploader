@@ -262,11 +262,7 @@ function createJSTrees(jsonData) {
               "show_only_matches" : true
 	        },
 
-		},		
-		"checkbox" : {
-		    "keep_selected_style" : false,
-			"three_state" : false
-		 },
+		},
 		"contextmenu":{         
 		    "items": function($node) {
 		        var tree = $("#collections").jstree(true);
@@ -291,6 +287,8 @@ function createJSTrees(jsonData) {
 			"search", 
 			"sort", 
 			// "state", 
+
+
 			"types", 
 			"unique", 
 			"wholerow", 
@@ -301,6 +299,8 @@ function createJSTrees(jsonData) {
 	});
 
 }    
+
+
 
 //Get datasets
 function getDatasets(collectionID, datasetID) {
