@@ -732,6 +732,7 @@ function postTemplate(e) {
    	var tab = $('.tab-content');
    	var active = tab.find('.tab-pane.active');
 	var templateName = active.find('.datasetName').val();
+
 	var tagName = $('.tagName').val().toUpperCase(); 
 	var shareTemplate = $('#checkShareTemplate').is(":checked");
 	$.ajax({
@@ -1012,6 +1013,7 @@ function postDatasets() {
 	var menuName = $('.nav-tabs .active > a').attr("href");
 
 	var datasetDescription = buildStr(menuName); 
+	console.log(datasetDescription);
     var currentNodeId = jQuery("#collections").jstree("get_selected");
 
 	$.ajax({
@@ -1304,10 +1306,12 @@ function buildStr(menuName) {
 
 			//only allow full key/value pairings to be inserted
 			if (val != '' && values[idx] != ''){
-		    	arrayCombined.push(val + " : " + values[idx]);
+		    	arrayCombined.push(val + " : " + values[idx] + ",");
 			}
 		});
-		return(arrayCombined.join("\n"));
+		str = arrayCombined.join("\n"); 
+		str = str.replace(/,\s*$/, "");
+		return(str);
 }
 
 function buildTemplate() {
@@ -1434,13 +1438,14 @@ function createDiv(keyName,val, txt) {
 			txtToWrite = "Default Value: (optional)";
 		}
 
-	    return '<div class="row top-buffer"><div class="col-xs-6"><b>' + "<label for='name'>Name: " + '</label></b></span>' +
+	    return '<div class="row top-buffer"><div class="col-xs-5"><b>' + "<label for='name'>Name: " + '</label></b></span>' +
     		'<input class="metaDataKey form-control" id="name" type="text" value=' + valKeyName.replace(/ /g,"&nbsp;") +'></div>' + 
 
     		// '<div class="col-xs-2" style="margin-left:-15px;"><b>' + "<label for='val'>Unit: " + '</label></b>' +
+    		// '<select class="form-control"><option value="">--Select One</option><option value="">Number</option><option value="">Text</option><option value="">Decimal</option><option value="">Boolean</option></select></div>' + 
     		// '<input class="metaDataVal form-control" type="text" id="val"></div>'  + 
 
-    		'<div class="col-xs-5" style="margin-left:-15px;"><b>' + "<label for='val'>"+txtToWrite + '</label></b>' +
+    		'<div class="col-xs-4 style="margin-left:-15px;"><b>' + "<label for='val'>"+txtToWrite + '</label></b>' +
     		'<input class="metaDataVal form-control" type="text" id="val" value=' + valStr.replace(/ /g,"&nbsp;") +'></div>' + 
 
     		// '<div class="col-xs-3" style="margin-left:-15px;"><b>' + "<label for='val'>Description: " + '</label></b>' +
