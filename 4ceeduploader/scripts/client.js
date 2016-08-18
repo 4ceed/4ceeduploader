@@ -447,7 +447,6 @@ function getPreviousDatasets(){
         	xhr.setRequestHeader("Authorization", "Basic " + btoa(username + ":" + password));
 		}, 
 		success: function(data){
-			// console.log(data);
 			showPreviousDatasets(data); 
 		}, 
 		error: function(xhr, status, error) {
@@ -600,7 +599,7 @@ function createBoxes(data){
 
 	$.each(data.terms, function(key, val) {
         var div = $("<div />");
-        div.html(createDiv(val.key, val.default_value, txt));
+        div.html(createDiv(val.key, val.default_value, val.units, val.data_type));
         $(menuName + ' ' + ".templateData").append(div);
 	}); 
 
@@ -615,7 +614,7 @@ function createBoxesForPreviousDataset(data){
 
 	$.each(data.terms, function(i, val) {
 		var div = $("<div />");
-		div.html(createDiv(val.key, val.default_value, 1));
+        div.html(createDiv(val.key, val.default_value, val.units, val.data_type));
 		$("#prevMenu .templateData").append(div);
 	}); 
 
@@ -1427,35 +1426,38 @@ $('.search-input').keydown(function (e) {
 	}
 });
 
-//Create dynmiac textbox
-function createDiv(keyName,val, txt) {
-		var valKeyName = jQuery.trim(keyName);
-		var valStr = jQuery.trim(val);
-		var txtToWrite = "";  
-		if (txt == 1){
-			txtToWrite = "Value: ";
-		}else{
-			txtToWrite = "Default Value: (optional)";
-		}
+//Create dynamic textbox
+function createDiv(keyName, val, units, dataType) {
+    var valKeyName = jQuery.trim(keyName);
+    var valStr = jQuery.trim(val);
+    var valUnits = jQuery.trim(units);
+    var valType = jQuery.trim(dataType);
+    var txtToWrite = "Default Value: (optional)";
+    var txtString = dataType == "string" ? "<option value='string' selected>String</option>" : "<option value='string'>String</option>"; 
+    var txtNumber = dataType == "number" ? "<option value='number' selected>Number</option>" : "<option value='number'>Number</option>"; 
+    var txtBoolean = dataType == "boolean" ? "<option value='boolean' selected>Boolean</option>" : "<option value='boolean'>Boolean</option>"; 
 
-	    return '<div class="row top-buffer"><div class="col-xs-5"><b>' + "<label for='name'>Name: " + '</label></b></span>' +
-    		'<input class="metaDataKey form-control" id="name" type="text" value=' + valKeyName.replace(/ /g,"&nbsp;") +'></div>' + 
+    return '<div class="row top-buffer"><div class="col-xs-4"><b>' + "<label for='name'>Name: " + '</label></b></span>' +
+        '<input class="metaDataKey form-control" id="name" type="text" value=' + valKeyName.replace(/ /g,"&nbsp;") +'></div>' +
 
-    		// '<div class="col-xs-2" style="margin-left:-15px;"><b>' + "<label for='val'>Unit: " + '</label></b>' +
-    		// '<select class="form-control"><option value="">--Select One</option><option value="">Number</option><option value="">Text</option><option value="">Decimal</option><option value="">Boolean</option></select></div>' + 
-    		// '<input class="metaDataVal form-control" type="text" id="val"></div>'  + 
+        '<div class="col-xs-2"><b>' + "<label for='name'>Unit Type: " + '</label></b></span>' +
+        '<input class="metaDataUnit form-control" type="text" id="metaDataUnit" value=' + valUnits.replace(/ /g,"&nbsp;") +'></div>' +
 
-    		'<div class="col-xs-4 style="margin-left:-15px;"><b>' + "<label for='val'>"+txtToWrite + '</label></b>' +
-    		'<input class="metaDataVal form-control" type="text" id="val" value=' + valStr.replace(/ /g,"&nbsp;") +'></div>' + 
+        '<div class="col-xs-2" style=""><b>' + "<label for='val'>Data Type: " + '</label></b>' +
+        '<select class="metaDataType form-control" id="metaDataType">' +
+        '' + txtString + '' + 
+        '' + txtNumber + '' + 
+        '' + txtBoolean + '' + 
+        '</select></div>' +
 
-    		// '<div class="col-xs-3" style="margin-left:-15px;"><b>' + "<label for='val'>Description: " + '</label></b>' +
-    		// '<input class="metaDataVal form-control" type="text" id="val"></div>'  + 
+        '<div class="col-xs-3" style="margin-left:-15px;"><b>' + "<label for='val'>"+txtToWrite + '</label></b>' +
+        '<input class="metaDataVal form-control" type="text" id="val" value=' + valStr.replace(/ /g,"&nbsp;") +'></div>' +
 
-
-    		'<div class="col-xs-1" style="margin-left:-15px;"><b>' + "<label for='val'>&nbsp;" + '</label></b>' +
-    		'<input type="button" value="Remove" class="remove btn btn-danger"></div></div>' 
+        '<div class="col-xs-1" style="margin-left:-15px;"><b>' + "<label for='val'>&nbsp;" + '</label></b>' +
+        '<input type="button" value="Remove" class="remove btn btn-danger"></div></div>'
 
 }
+
 
 
 
