@@ -1013,7 +1013,7 @@ function postDatasets() {
 	var menuName = $('.nav-tabs .active > a').attr("href");
 	var datasetDescription = buildStr(menuName); 
     var currentNodeId = jQuery("#collections").jstree("get_selected");
-
+    console.log(currentNodeId[0].toString());
 	$.ajax({
 		url:clowderURL+"datasets/createempty",
 		type:"POST", 
@@ -1022,9 +1022,8 @@ function postDatasets() {
 			xhr.setRequestHeader("Accept", "application/json");
 			xhr.setRequestHeader("Authorization", "Basic " + btoa(username + ":" + password));
 		}, 
-		data: JSON.stringify({ name: datasetName, description: datasetDescription, authorId: author}),
+		data: JSON.stringify({ name: datasetName, description: datasetDescription, authorId: author, collection: currentNodeId}),
 		success: function(data){
-
 			 $('#collapse4').collapse('hide');
 			 $('#collapse3').collapse('show');
 			 //clear all the inputs in the new dataset field tabs
@@ -1038,10 +1037,9 @@ function postDatasets() {
 		     $("#otherOptions").hide(); 
 			 $('.datasetName').val('');
 			 
-		     var currentNodeId = $("#collections").jstree("get_selected");
 			 $('.nav-tabs a:first').tab('show')
-			 postDatasetToCollection(currentNodeId[0], data.id);
-			 // getDatasets(currentNodeId, data.id);	
+			 // postDatasetToCollection(currentNodeId[0], data.id);
+			 getDatasets(currentNodeId, data.id);	
 
 		}, 
 		error: function(xhr, status, error) {
@@ -1053,47 +1051,6 @@ function postDatasets() {
 			  showConfirmButton: false
 			});
 		}			
-	})
-} 
-
-//Create NEW dataset and associate it with a collection
-function postDatasetToCollection(collectionID, datasetID) {
-	console.log(collectionID);
-	console.log(datasetID);
-
-
-	var url = clowderURL+"collections/"+collectionID+"/datasets/"+datasetID+"";
-	$.ajax({
-		url: url,
-		type:"POST", 
-		beforeSend: function(xhr){
-			// xhr.setRequestHeader("Content-Type", "application/json"); 
-			// xhr.setRequestHeader("Accept", "application/json");
-			xhr.setRequestHeader("Authorization", "Basic " + btoa(username + ":" + password));
-		}, 
-		data: JSON.stringify({ coll_id: collectionID, ds_id: datasetID}),
-		success: function(data){
-			swal({
-			  title: "Success", 
-			  text: "A new dataset was created",
-			  type: "success",
-			  timer: 1500,
-			  showConfirmButton: false
-			});
-
-		getDatasets(collectionID, datasetID);	
-
-		}, 
-		error: function(xhr, status, error) {
-			swal({
-			  title: "Error", 
-			  text: "There was a problem adding the dataset to the collection",
-			  type: "error",
-			  timer: 1500,
-			  showConfirmButton: false
-			});
-		}
-	
 	})
 } 
 

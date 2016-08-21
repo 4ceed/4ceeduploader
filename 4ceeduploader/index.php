@@ -341,6 +341,8 @@
 	<script src="4ceeduploader/jquery-upload/js/jquery.uploadfile.js"></script>
 	<script src="4ceeduploader/sweetalert/js/sweetalert-dev.min.js"></script>	
 	<script src="4ceeduploader/jstree/jstree.js"></script>	   
+	<script src="4ceeduploader/jquery-steps/jquery.steps.js"></script>	   
+
 	</body>
 </html>
 
