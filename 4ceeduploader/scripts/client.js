@@ -515,6 +515,17 @@ function showTagTemplates(data){
 	$(".tagTemplates").focus(); 	
 }
 
+function showPreviousDatasets(data) {
+	console.log(data);
+	$('<option>').val('').text('--Select One--').appendTo('.prevTemplates');
+
+	$.each(data, function(key, val) {
+		$(".prevTemplates").append($("<option class='placeholder'></option>").val(val.dataset_id).html(val.dataset_name));
+	}); 
+	
+	$(".prevTemplates").focus(); 	
+}
+
 function getAllTags(){
 
 	var url = baseURL+"t2c2/templates/allTags";
@@ -568,16 +579,6 @@ function getByTagId(tagId){
 		}
 
 	}); 
-}
-
-function showPreviousDatasets(data) {
-	$('<option>').val('').text('--Select One--').appendTo('.prevTemplates');
-
-	$.each(data, function(key, val) {
-		$(".prevTemplates").append($("<option class='placeholder'></option>").val(val.dataset_id).html(val.dataset_name));
-	}); 
-	
-	$(".prevTemplates").focus(); 	
 }
 
 function createBoxes(data){
@@ -727,13 +728,13 @@ function postTemplate(e) {
     e.preventDefault();
     e.stopPropagation();
 
-	var templateTerms = buildTemplate(); 
-   	var tab = $('.tab-content');
-   	var active = tab.find('.tab-pane.active');
-	var templateName = active.find('.datasetName').val();
-
+   	var menuName = $('.nav-tabs .active > a').attr("href");
+	var templateTerms = buildTemplate(menuName); 
 	var tagName = $('.tagName').val().toUpperCase(); 
 	var shareTemplate = $('#checkShareTemplate').is(":checked");
+
+	var templateName = $(menuName + ' .datasetName').val();
+	console.log(templateName);
 	$.ajax({
 		url: baseURL+"t2c2/templates/createExperimentTemplateFromJson?isPublic="+shareTemplate+"",
 		type:"POST", 
@@ -1010,9 +1011,7 @@ function postDatasets() {
    	var active = tab.find('.tab-pane.active');
 	var datasetName = active.find('.datasetName').val();
 	var menuName = $('.nav-tabs .active > a').attr("href");
-
 	var datasetDescription = buildStr(menuName); 
-	console.log(datasetDescription);
     var currentNodeId = jQuery("#collections").jstree("get_selected");
 
 	$.ajax({
@@ -1025,13 +1024,6 @@ function postDatasets() {
 		}, 
 		data: JSON.stringify({ name: datasetName, description: datasetDescription, authorId: author}),
 		success: function(data){
-			swal({
-			  title: "Success", 
-			  text: "A new dataset was created",
-			  type: "success",
-			  timer: 1500,
-			  showConfirmButton: false
-			});
 
 			 $('#collapse4').collapse('hide');
 			 $('#collapse3').collapse('show');
@@ -1048,7 +1040,7 @@ function postDatasets() {
 			 
 		     var currentNodeId = $("#collections").jstree("get_selected");
 			 $('.nav-tabs a:first').tab('show')
-			 postDatasetToCollection(currentNodeId, data.id);
+			 postDatasetToCollection(currentNodeId[0], data.id);
 			 // getDatasets(currentNodeId, data.id);	
 
 		}, 
@@ -1066,14 +1058,17 @@ function postDatasets() {
 
 //Create NEW dataset and associate it with a collection
 function postDatasetToCollection(collectionID, datasetID) {
+	console.log(collectionID);
+	console.log(datasetID);
+
 
 	var url = clowderURL+"collections/"+collectionID+"/datasets/"+datasetID+"";
 	$.ajax({
 		url: url,
 		type:"POST", 
 		beforeSend: function(xhr){
-			xhr.setRequestHeader("Content-Type", "application/json"); 
-			xhr.setRequestHeader("Accept", "application/json");
+			// xhr.setRequestHeader("Content-Type", "application/json"); 
+			// xhr.setRequestHeader("Accept", "application/json");
 			xhr.setRequestHeader("Authorization", "Basic " + btoa(username + ":" + password));
 		}, 
 		data: JSON.stringify({ coll_id: collectionID, ds_id: datasetID}),
@@ -1086,7 +1081,7 @@ function postDatasetToCollection(collectionID, datasetID) {
 			  showConfirmButton: false
 			});
 
-			getDatasets(collectionID, datasetID);	
+		getDatasets(collectionID, datasetID);	
 
 		}, 
 		error: function(xhr, status, error) {
@@ -1300,34 +1295,43 @@ $("#formGetCollections").validate({
 function buildStr(menuName) {
 		var keys = $.map($(menuName + ' ' + '.metaDataKey'), function (el) { return el.value; });
 		var values = $.map($(menuName + ' ' + '.metaDataVal'), function (el) {return el.value;}); 
+		var unitType = $.map($(menuName + ' ' + '.metaDataUnit'), function (el) {return el.value;}); 
+		
 		var arrayCombined = []; 
 		$.each(keys, function (idx, val) {
 
 			//only allow full key/value pairings to be inserted
 			if (val != '' && values[idx] != ''){
-		    	arrayCombined.push(val + " : " + values[idx] + ",");
+		    	arrayCombined.push(val + " : " + values[idx] + " " + unitType[idx]);
 			}
 		});
-		str = arrayCombined.join("\n"); 
-		str = str.replace(/,\s*$/, "");
+		var str = arrayCombined.join(",\n "); 
+		// str = str.replace(/,\s*$/, "");
 		return(str);
 }
 
-function buildTemplate() {
-		var metaDataKeys = $.map($('#createMenu .metaDataKey'), function (el) { return el.value; });
-		var metaDataVals = $.map($('#createMenu .metaDataVal'), function (el) {return el.value;}); 
-		var arr = []; 
+function buildTemplate(idName) {
+    var metaDataKeys = $.map($(idName + ' .metaDataKey'), function (el) { return el.value; });
+    var metaDataVals = $.map($(idName + ' .metaDataVal'), function (el) {return el.value;});
+    var metaDataUnits = $.map($(idName + ' .metaDataUnit'), function (el) {return el.value;});
+    var metaDataTypes = $.map($(idName + ' .metaDataType'), function (el) {return el.value;});
 
-		$.each(metaDataKeys, function (idx, keyName) {
-			if (keyName != ''){
-				var objCombined = {}; 
-				objCombined['key'] = keyName; 
-				objCombined['default_value'] = metaDataVals[idx]; 
-				arr.push(objCombined);
-			}
-		});
-		return(arr);
+    var arr = [];
+
+    $.each(metaDataKeys, function (idx, keyName) {
+        if (keyName != ''){
+            var objCombined = {};
+            objCombined['key'] = keyName;
+            objCombined['units'] = metaDataUnits[idx];;
+            objCombined['data_type'] = metaDataTypes[idx];;
+            objCombined['default_value'] = metaDataVals[idx];
+
+            arr.push(objCombined);
+        }
+    });
+    return(arr);
 }
+
 
 //Auto complete dataset field
 $(function() {
@@ -1437,6 +1441,11 @@ function createDiv(keyName, val, units, dataType) {
     var txtNumber = dataType == "number" ? "<option value='number' selected>Number</option>" : "<option value='number'>Number</option>"; 
     var txtBoolean = dataType == "boolean" ? "<option value='boolean' selected>Boolean</option>" : "<option value='boolean'>Boolean</option>"; 
 
+    console.log(valKeyName + "\n");
+    console.log(valStr + "\n");
+    console.log(valUnits + "\n");
+    console.log(valType + "\n");
+    
     return '<div class="row top-buffer"><div class="col-xs-4"><b>' + "<label for='name'>Name: " + '</label></b></span>' +
         '<input class="metaDataKey form-control" id="name" type="text" value=' + valKeyName.replace(/ /g,"&nbsp;") +'></div>' +
 

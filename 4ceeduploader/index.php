@@ -245,8 +245,7 @@
 												</select>
 												<br />
 											</div>
-<!-- 											<div class="otherOptions">
- -->
+
 												<label>Choose a name for your template:</label>
 												<input type="text" class="form-control datasetName" placeholder="<Example> Sample Name, PECVD Oxide, Diffusion" required><br />
 												<label>Create tags to describe your template: (optional)</label> 				
@@ -266,8 +265,7 @@
 													<br />
 												</div>
 												<br />
-<!-- 										    </div>
- -->											<div class="form-group" id="btnTemplate">	
+											<div class="form-group" id="btnTemplate">	
 													<input type="button" value="Create Template" class="btn btn-success btnTemplate form-control">
 		 										</div>
  										</div>
