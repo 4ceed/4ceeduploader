@@ -738,7 +738,7 @@ function postTemplate(e) {
 	$.ajax({
 		url: baseURL+"t2c2/templates/createExperimentTemplateFromJson?isPublic="+shareTemplate+"",
 		type:"POST", 
-		data: JSON.stringify({ name: templateName, terms: templateTerms, tags: tagName}),
+		data: JSON.stringify({ name: templateName, terms: templateTerms, tags: tagName, templateId : teml}),
 		beforeSend: function(xhr){
 			xhr.setRequestHeader("Content-Type", "application/json"); 
 			xhr.setRequestHeader("Accept", "application/json");
@@ -880,10 +880,10 @@ function postCollections() {
 
 //Deprecating route soon. No longer necessary in api
 //Set collection to root
-function postRootCollection(collectionID, rootFlag) {	
+function postRootCollection(collectionID) {	
 
 	$.ajax({
-		url: clowderURL+"collections/"+collectionID+"/rootFlag/"+rootFlag+"",
+		url: clowderURL+"collections/"+collectionID+"",
 		type:"POST", 
 		beforeSend: function(xhr){
         	xhr.setRequestHeader("Authorization", "Basic " + btoa(username + ":" + password));
@@ -1013,7 +1013,6 @@ function postDatasets() {
 	var menuName = $('.nav-tabs .active > a').attr("href");
 	var datasetDescription = buildStr(menuName); 
     var currentNodeId = jQuery("#collections").jstree("get_selected");
-    console.log(currentNodeId[0].toString());
 	$.ajax({
 		url:clowderURL+"datasets/createempty",
 		type:"POST", 
@@ -1026,9 +1025,9 @@ function postDatasets() {
 		success: function(data){
 			 $('#collapse4').collapse('hide');
 			 $('#collapse3').collapse('show');
+
 			 //clear all the inputs in the new dataset field tabs
 			 $('#datasets').empty();
-			 // $('#datasetName').val('');
 			 $('#datasetDescription').val('');
 		     $(".templateData").empty();
 		     $(".metaDataSettings").empty();	
@@ -1038,8 +1037,8 @@ function postDatasets() {
 			 $('.datasetName').val('');
 			 
 			 $('.nav-tabs a:first').tab('show')
-			 // postDatasetToCollection(currentNodeId[0], data.id);
-			 getDatasets(currentNodeId, data.id);	
+			 getDatasets(currentNodeId, data.id); 
+
 
 		}, 
 		error: function(xhr, status, error) {
@@ -1053,6 +1052,35 @@ function postDatasets() {
 		}			
 	})
 } 
+
+function addDatasetToTemplate(){
+
+	var url = baseURL+"t2c2/files/"+id+"/updateDescription";
+	$.ajax({
+		url: url,
+		type:"PUT", 
+		beforeSend: function(xhr){
+			xhr.setRequestHeader("Content-Type", "application/json"); 
+			xhr.setRequestHeader("Accept", "application/json");
+			xhr.setRequestHeader("Authorization", "Basic " + btoa(username + ":" + password));
+		}, 
+		data: JSON.stringify({ description: comments}),
+		success: function(data){
+
+		}, 
+		error: function(xhr, status, error) {
+			swal({
+			  title: "Error", 
+			  text: "There was a problem adding the comments to the file",
+			  type: "error",
+			  timer: 1500,
+			  showConfirmButton: false
+			});
+		}
+	
+	})
+
+}
 
 function addFileDescription(id, comments){
 
@@ -1423,9 +1451,5 @@ function createDiv(keyName, val, units, dataType) {
         '<input type="button" value="Remove" class="remove btn btn-danger"></div></div>'
 
 }
-
-
-
-
 
 

@@ -43,7 +43,9 @@
 		</script>
 	</head>
 	<body>
+
 	<div class="container">
+
 		<div class="header clearfix">
 			<nav>
 				<ul class="nav nav-pills pull-right">
@@ -219,6 +221,10 @@
 										<div class="otherOptions">
 											<label>Choose a name for your dataset:</label>
 											<input type="text" class="form-control datasetName" placeholder="Example... Sample Name, PECVD Oxide, Diffusion" required><br />
+
+<!-- 											<label>Dataset Description:</label>
+											<input type="text" class="form-control datasetDescription" name="datasetDescription" id="datasetDescription" placeholder="Example... Time, Temp, Pressure, Current"  ><br />
+ -->
 											<input type="button" value="Add New Field" class="btn btn-success btnAdd"/>	
 									    	<button type="button" class="clearTemplate btn btn-danger">Clear Template</button><br />
 									    	<hr />
