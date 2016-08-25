@@ -130,7 +130,7 @@ $(".dsPanel").on('click', function() {
 $("#collections").on("rename_node.jstree", function (e, data) {
     var currentNodeId = jQuery("#collections").jstree("get_selected");
 	var selectedText = data.node.text;
-	postNestedCollection(currentNodeId, selectedText); 
+	postNestedCollection(currentNodeId[0], selectedText); 
 	$('#collections').jstree("deselect_all");
 	$('#collections').jstree(true).check_node(data.node.id);
 });
@@ -819,7 +819,7 @@ function postCollections() {
  			var newCollectionID = data.id
 
  			//This is going to be deprecated soon 6/16
-			postRootCollection(data.id, true);
+			// postRootCollection(data.id, true);
 
 			//recreate tree	
 
@@ -840,7 +840,7 @@ function postCollections() {
 				 	var currentNodeId = $("#collections").jstree("get_selected");
 
 					var selectedText = data.node.text;
-					postNestedCollection(currentNodeId, selectedText); 
+					postNestedCollection(currentNodeId[0], selectedText); 
 					$('#collections').jstree("deselect_all");
 					$('#collections').jstree(true).check_node(data.node.id);	
 
@@ -884,25 +884,28 @@ function postCollections() {
 
 //Deprecating route soon. No longer necessary in api
 //Set collection to root
-function postRootCollection(collectionID) {	
+// function postRootCollection(collectionID) {	
 
-	$.ajax({
-		url: clowderURL+"collections/"+collectionID+"",
-		type:"POST", 
-		beforeSend: function(xhr){
-        	xhr.setRequestHeader("Authorization", "Basic " + btoa(username + ":" + password));
-		}, 
-		success: function(data){
-		}, 
-		error: function(xhr, status, error) {
-		}	
-	})
-} 
+// 	$.ajax({
+// 		url: clowderURL+"collections/"+collectionID+"",
+// 		type:"POST", 
+// 		beforeSend: function(xhr){
+//         	xhr.setRequestHeader("Authorization", "Basic " + btoa(username + ":" + password));
+// 		}, 
+// 		success: function(data){
+// 		}, 
+// 		error: function(xhr, status, error) {
+// 		}	
+// 	})
+// } 
 
 //Create NEW nested collection
-function postNestedCollection(collectionID, collectionName) {
-	var collectionID = collectionID.toString(); 
-	var nestedCollectionName = collectionName
+function postNestedCollection(collectionID, nestedCollectionName) {
+
+	// var collectionID = collectionID.toString(); 
+	// var nestedCollectionName = collectionName
+	console.log(collectionID); 
+	console.log(nestedCollectionName);
 	var nestedCollectionDescription = ""; //Add an optional label to jstree on create for a collection description
 
 	 $.ajax({
@@ -937,7 +940,7 @@ function postNestedCollection(collectionID, collectionName) {
 			$("#collections").on("rename_node.jstree", function (e, data) {
 			    var currentNodeId = $("#collections").jstree("get_selected");
 				var selectedText = data.node.text;
-				postNestedCollection(currentNodeId, selectedText); 
+				postNestedCollection(currentNodeId[0], selectedText); 
 				$('#collections').jstree("deselect_all");
 				$('#collections').jstree(true).check_node(data.node.id);
 
