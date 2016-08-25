@@ -11,12 +11,11 @@ $(document).ready(function() {
 	$("#fileSubmit").hide(); 
 	$("#formGetDatasets").hide(); 
 
-	// hideDivs();
 	//disable ds and file divs
 	$(".username").text(fullname);
 	$(".username").css('text-transform', 'capitalize');
 
-	//load collections
+	//load collection
 	getCollections(); 
     $('[data-toggle="popover"]').popover(); 
 	setDatasetID = ""; 
@@ -107,12 +106,10 @@ $("#accordion2").on("shown.bs.collapse", function () {
 });
 
 $(".newDS").on('click', function() { 
-	// $(".existingDS").hide(); 
 	$("#fileSubmit").hide(); 
 });
 
 $(".existingDS").on('click', function() { 
-	// $(".newDS").hide(); 
 	//if there is a value for a selection then show the file panel
 	if ($("#datasets").val() != "" && $("#datasets").val() != null){
 		$("#fileSubmit").show(); 
@@ -120,13 +117,11 @@ $(".existingDS").on('click', function() {
 });
 
 $(".dsNewPanel").on('click', function() { 
-	// $(".existingDS").hide(); 
 	$(".collapse3").hide(); 
 	$(".collapse4").show(); 
 });
 
 $(".dsPanel").on('click', function() { 
-	// $(".existingDS").hide(); 
 	$(".collapse4").hide(); 
 	$(".collapse3").show(); 
 });
@@ -286,9 +281,6 @@ function createJSTrees(jsonData) {
 			"massload", 
 			"search", 
 			"sort", 
-			// "state", 
-
-
 			"types", 
 			"unique", 
 			"wholerow", 
@@ -300,12 +292,9 @@ function createJSTrees(jsonData) {
 
 }    
 
-
-
 //Get datasets
 function getDatasets(collectionID, datasetID) {
 
-	// var url = clowderURL+'collections/' + collectionID + '/getDatasets';	
 	$('#datasets').empty();
 
 	$.ajax({
@@ -331,16 +320,15 @@ function getDatasets(collectionID, datasetID) {
 			var len = $('#datasets option').length;
 
 			$("#collections").removeClass( "focusedInput" );					
-			// $("#collapse4").collapse('hide');
 
 			if (len > 0){
 				//OPTIONAL
 				$('#datasets').removeAttr('disabled');
 
-				// $('#datasets').first().focus();
 				$('#datasets').addClass( "focusedInput" );	
 
 				}else{
+
 				//OPTIONAL
 			   	$('#datasets').attr("disabled", "disabled");	
 				$('#datasets').css({'background':''});
@@ -420,8 +408,6 @@ function getTemplate(id){
 		}, 
 		success: function(data){
 			createBoxes(data); 
-			// $(".tagData").hide(); 
-
 		}, 
 		error: function(xhr, status, error) {
 			swal({
@@ -437,8 +423,10 @@ function getTemplate(id){
 
 //Load Previous Datasets
 function getPreviousDatasets(){
+	var numberOfDatasetsToShows = 10; 
 	$.ajax({
-		url: baseURL+"t2c2/getKeyValuesForLastDatasets",
+
+		url: baseURL + "t2c2/templates/lastTemplate", // + numberOfDatasetsToShows + "",
 		type:"GET", 
 		dataType: "json",
 		beforeSend: function(xhr){
@@ -462,8 +450,10 @@ function getPreviousDatasets(){
 }
 
 function getPreviousDataset(id){
+	console.log(id);
 	$.ajax({
-		url: baseURL+"t2c2/getKeyValuesForDatasetId/"+id+"",
+
+		url: baseURL + "t2c2/datasets/getDatasetAndTemplate/" + id + "",
 		type:"GET", 
 		dataType: "json",
 		beforeSend: function(xhr){
@@ -477,7 +467,7 @@ function getPreviousDataset(id){
 		error: function(xhr, status, error) {
 			swal({
 			  title: "Error", 
-			  text: "There was a problem returning custom templates",
+			  text: "There was a problem returning previous datasets",
 			  type: "error",
 			  timer: 1500,
 			  showConfirmButton: false
@@ -516,11 +506,9 @@ function showTagTemplates(data){
 }
 
 function showPreviousDatasets(data) {
-	console.log(data);
 	$('<option>').val('').text('--Select One--').appendTo('.prevTemplates');
-
 	$.each(data, function(key, val) {
-		$(".prevTemplates").append($("<option class='placeholder'></option>").val(val.dataset_id).html(val.dataset_name));
+		$(".prevTemplates").append($("<option class='placeholder'></option>").val(val.attached_dataset).html(val.name));
 	}); 
 	
 	$(".prevTemplates").focus(); 	
@@ -574,8 +562,12 @@ function getByTagId(tagId){
 		}, 
 		success: function(data){
 			$(".tagData").show(); 
-			$(".otherOptions").hide(); 
-			showTagTemplates(data);		
+			// $(".otherOptions").hide(); 
+			if (data.length){
+				showTagTemplates(data);	
+			}else{
+
+			}
 		}
 
 	}); 
@@ -590,7 +582,6 @@ function createBoxes(data){
 
   	//Get current tab and use name to determine what the label will say based on it's tab
   	var menuName = $('.nav-tabs .active > a').attr("href");
-
 	var txt = ""; 
 	if (menuName == "#custMenu"){
 		txt = 1; 
@@ -611,9 +602,8 @@ function createBoxesForPreviousDataset(data){
   	$(".btnDataset").show();
 	$(".btnAdd").show();
   	$("#btnTemplate").show();
-  	$(".otherOptions").show();
-
-	$.each(data.terms, function(i, val) {
+  	$(".prevOptions").show();
+	$.each(data.template.terms, function(i, val) {
 		var div = $("<div />");
         div.html(createDiv(val.key, val.default_value, val.units, val.data_type));
 		$("#prevMenu .templateData").append(div);
@@ -624,7 +614,7 @@ function createBoxesForPreviousDataset(data){
 function clearTemplate(){
 	$(".templateData").empty();
 	$(".metaDataSettings").empty();
-	$(".otherOptions").hide();
+	$(".prevOptions").hide();
 	$(".btnDataset").hide();
 	$("#btnTemplate").hide();
 	$(".templates").focus(); 
@@ -646,7 +636,7 @@ $(".clearTemplate").click(function(e){
 //When advanced or create tabs are selected, clear and then get user templates
 $(".custMenu, .createMenu, .prevMenu").click(function(){
 	$(".btnDataset").hide();
-	$(".otherOptions").hide();
+	$(".prevOptions").hide();
 	$(".showTemplates").show(); 
 	$(".showGlobalTemplates").show(); 
 
@@ -665,7 +655,6 @@ $(".custMenu, .createMenu, .prevMenu").click(function(){
 	getTemplates();
 	getPublicTemplates(); 
 	getPreviousDatasets(); 	
-
 });
 
 //Run when basic tab is selected
@@ -679,6 +668,11 @@ $(".clearMenu").click(function(){
 $(".templates").change(function(){
 	var id = $(this).val(); 
 
+	$(".tagTemplates").val([]);
+	$(".tagData").hide(); 
+	$(".globalTemplates").val([]);
+	$(".templateSearch").val('');
+
 	if (id != ''){
 		getTemplate(id);
 	}
@@ -687,6 +681,10 @@ $(".templates").change(function(){
 $(".globalTemplates").change(function(){
 	var id = $(this).val(); 
 
+	$(".templates").val([]);
+	$(".tagTemplates").val([]);
+	$(".tagData").hide(); 
+	$(".templateSearch").val('');
 	if (id != ''){
 		getTemplate(id);
 	}
@@ -703,6 +701,9 @@ $(".prevTemplates").change(function(){
 $(".tagTemplates").change(function(){
 	var id = $(this).val(); 
 
+	$(".templates").val([]);
+	$(".globalTemplates").val([]);
+
 	if (id != ''){
 		getTemplate(id);
 	}
@@ -718,27 +719,24 @@ $(".clearMenu").click(function(){
 $("#btnTemplate").on('click', function(e) {
 
 	if ($("#formGetDatasets").valid()){
-		postTemplate(e); 
+		postTemplate(true, ''); 
 	}
 
 }); 
 
-//Posts new template
-function postTemplate(e) { 
-    e.preventDefault();
-    e.stopPropagation();
 
-   	var menuName = $('.nav-tabs .active > a').attr("href");
+//Posts new template
+function postTemplate(templateType, datasetID){
+	var menuName = $('.nav-tabs .active > a').attr("href");
 	var templateTerms = buildTemplate(menuName); 
 	var tagName = $('.tagName').val().toUpperCase(); 
 	var shareTemplate = $('#checkShareTemplate').is(":checked");
-
-	var templateName = $(menuName + ' .datasetName').val();
-	console.log(templateName);
+    var datasetName = $("" + menuName + " .datasetName").val(); 
+    var templateType = templateType.toString(); 
 	$.ajax({
 		url: baseURL+"t2c2/templates/createExperimentTemplateFromJson?isPublic="+shareTemplate+"",
 		type:"POST", 
-		data: JSON.stringify({ name: templateName, terms: templateTerms, tags: tagName, templateId : teml}),
+		data: JSON.stringify({ name: datasetName, terms: templateTerms, tags: tagName, master: templateType}),
 		beforeSend: function(xhr){
 			xhr.setRequestHeader("Content-Type", "application/json"); 
 			xhr.setRequestHeader("Accept", "application/json");
@@ -753,6 +751,12 @@ function postTemplate(e) {
 			  showConfirmButton: false
 			});
 
+			if (templateType === "false"){
+								console.log(datasetID);
+
+				console.log(data.id);
+				addTemplateToDataset(datasetID, data.id);
+			}
 			 // clear all the inputs in the new dataset field tabs
 			$(".templateData").empty();
 			$(".metaDataSettings").empty();
@@ -961,7 +965,7 @@ function postNestedCollection(collectionID, collectionName) {
 				$("#formGetDatasets").hide(); 
 			});			
 
-			// postNestedCollectionToCollection(collectionID, data.id);
+			postNestedCollectionToCollection(collectionID, data.id);
 
 		}, 
 		error: function(xhr, status, error) {
@@ -1007,12 +1011,12 @@ function postNestedCollectionToCollection(collectionID, nestedCollectionID) {
 
 //Create NEW dataset
 function postDatasets() {
-   	var tab = $('.tab-content');
-   	var active = tab.find('.tab-pane.active');
-	var datasetName = active.find('.datasetName').val();
+
 	var menuName = $('.nav-tabs .active > a').attr("href");
-	var datasetDescription = buildStr(menuName); 
+	var datasetDescription = $("" + menuName + " .datasetDescription").val(); 
+    var datasetName = $("" + menuName + " .datasetName").val(); 
     var currentNodeId = jQuery("#collections").jstree("get_selected");
+
 	$.ajax({
 		url:clowderURL+"datasets/createempty",
 		type:"POST", 
@@ -1023,22 +1027,45 @@ function postDatasets() {
 		}, 
 		data: JSON.stringify({ name: datasetName, description: datasetDescription, authorId: author, collection: currentNodeId}),
 		success: function(data){
+
+			 if (menuName != "#basicMenu"){
+				 postTemplate(false, data.id);	
+			 }		
+
 			 $('#collapse4').collapse('hide');
 			 $('#collapse3').collapse('show');
-
-			 //clear all the inputs in the new dataset field tabs
 			 $('#datasets').empty();
-			 $('#datasetDescription').val('');
+			 $('.datasetDescription').val('');
 		     $(".templateData").empty();
 		     $(".metaDataSettings").empty();	
 			 $("#fileSubmit").removeClass("hidden");					
 		     $("#fileSubmit").show("slow"); 
-		     $("#otherOptions").hide(); 
-			 $('.datasetName').val('');
-			 
+		     $(".prevOptions").hide(); 
+			 $('.datasetName').val('');			 
 			 $('.nav-tabs a:first').tab('show')
+
 			 getDatasets(currentNodeId, data.id); 
 
+			 var selectedMenu; 
+			 // var templateLength = ($(selectedMenu + " .templates").length);
+			 // var globalTemplateLength = ($(selectedMenu + " .globalTemplates").length);
+			 // var tagTemplateLength = ($(selectedMenu + " .tagTemplates").length);
+			 // console.log(templateLength);
+			 // console.log(globalTemplateLength);
+			 // console.log(tagTemplateLength);
+
+
+			 // if ($(templateLength).length){
+			 // 	selectedMenu = " .templates";
+			 // }else if ($(globalTemplateLength).length){
+			 // 	selectedMenu = " .globalTemplates";
+			 // }else if ($(tagTemplateLength).length){
+			 // 	selectedMenu = " .tagTemplates";
+			 // }else{
+
+			 // }
+			 // console.log(selectedMenu);
+			 // addTemplateToDataset(data.id, $("" + selectedMenu + "").val());
 
 		}, 
 		error: function(xhr, status, error) {
@@ -1053,9 +1080,9 @@ function postDatasets() {
 	})
 } 
 
-function addDatasetToTemplate(){
 
-	var url = baseURL+"t2c2/files/"+id+"/updateDescription";
+function addTemplateToDataset(datasetid, templateID){
+	var url = baseURL+ "t2c2/templates/" + templateID + "/attachToDataset/" + datasetid + ""; 
 	$.ajax({
 		url: url,
 		type:"PUT", 
@@ -1064,14 +1091,14 @@ function addDatasetToTemplate(){
 			xhr.setRequestHeader("Accept", "application/json");
 			xhr.setRequestHeader("Authorization", "Basic " + btoa(username + ":" + password));
 		}, 
-		data: JSON.stringify({ description: comments}),
+		data: JSON.stringify({ template_id: templateID, dataset_id: datasetid}),
 		success: function(data){
 
 		}, 
 		error: function(xhr, status, error) {
 			swal({
 			  title: "Error", 
-			  text: "There was a problem adding the comments to the file",
+			  text: "There was a problem creating this dataset",
 			  type: "error",
 			  timer: 1500,
 			  showConfirmButton: false
@@ -1248,10 +1275,7 @@ $(".custMenu, .createMenu, .clearMenu, .prevMenu").on('click', function() {
     $(".error").removeClass("error");	
 }); 
 
-$(".btnDataset").on('click', function() {
-	// $(".datasetName").addClass("required");
-	// $("#datasets").removeAttr('disabled');
-	// $('.datasetName').attr('required', true)
+$(".btnDataset").on('click', function(e) {
 	var jsTreeValid = false; 
 
 	// work around for jstree validation 
@@ -1265,7 +1289,7 @@ $(".btnDataset").on('click', function() {
 	}
 
 	if ($("#formGetDatasets").valid() && jstreeValid == true){
-		postDatasets(); 
+		postDatasets(e); 
 	}
 });	
 
@@ -1275,25 +1299,6 @@ $("#formGetCollections").validate({
 		postCollections(); 
     }
 });
-
-//Build string of metadata from dynamic textboxes
-function buildStr(menuName) {
-		var keys = $.map($(menuName + ' ' + '.metaDataKey'), function (el) { return el.value; });
-		var values = $.map($(menuName + ' ' + '.metaDataVal'), function (el) {return el.value;}); 
-		var unitType = $.map($(menuName + ' ' + '.metaDataUnit'), function (el) {return el.value;}); 
-		
-		var arrayCombined = []; 
-		$.each(keys, function (idx, val) {
-
-			//only allow full key/value pairings to be inserted
-			if (val != '' && values[idx] != ''){
-		    	arrayCombined.push(val + " : " + values[idx] + " " + unitType[idx]);
-			}
-		});
-		var str = arrayCombined.join(",\n "); 
-		// str = str.replace(/,\s*$/, "");
-		return(str);
-}
 
 function buildTemplate(idName) {
     var metaDataKeys = $.map($(idName + ' .metaDataKey'), function (el) { return el.value; });
@@ -1310,11 +1315,11 @@ function buildTemplate(idName) {
             objCombined['units'] = metaDataUnits[idx];;
             objCombined['data_type'] = metaDataTypes[idx];;
             objCombined['default_value'] = metaDataVals[idx];
-
             arr.push(objCombined);
         }
     });
     return(arr);
+
 }
 
 
@@ -1426,26 +1431,26 @@ function createDiv(keyName, val, units, dataType) {
     var txtNumber = dataType == "number" ? "<option value='number' selected>Number</option>" : "<option value='number'>Number</option>"; 
     var txtBoolean = dataType == "boolean" ? "<option value='boolean' selected>Boolean</option>" : "<option value='boolean'>Boolean</option>"; 
 
-    console.log(valKeyName + "\n");
-    console.log(valStr + "\n");
-    console.log(valUnits + "\n");
-    console.log(valType + "\n");
+    // console.log(valKeyName + "\n");
+    // console.log(valStr + "\n");
+    // console.log(valUnits + "\n");
+    // console.log(valType + "\n");
     
     return '<div class="row top-buffer"><div class="col-xs-4"><b>' + "<label for='name'>Name: " + '</label></b></span>' +
-        '<input class="metaDataKey form-control" id="name" type="text" value=' + valKeyName.replace(/ /g,"&nbsp;") +'></div>' +
+        '<input class="metaDataKey form-control" type="text" value=' + valKeyName.replace(/ /g,"&nbsp;") +'></div>' +
 
         '<div class="col-xs-2"><b>' + "<label for='name'>Unit Type: " + '</label></b></span>' +
-        '<input class="metaDataUnit form-control" type="text" id="metaDataUnit" value=' + valUnits.replace(/ /g,"&nbsp;") +'></div>' +
+        '<input class="metaDataUnit form-control" type="text" value=' + valUnits.replace(/ /g,"&nbsp;") +'></div>' +
 
         '<div class="col-xs-2" style=""><b>' + "<label for='val'>Data Type: " + '</label></b>' +
-        '<select class="metaDataType form-control" id="metaDataType">' +
+        '<select class="metaDataType form-control">' +
         '' + txtString + '' + 
         '' + txtNumber + '' + 
         '' + txtBoolean + '' + 
         '</select></div>' +
 
         '<div class="col-xs-3" style="margin-left:-15px;"><b>' + "<label for='val'>"+txtToWrite + '</label></b>' +
-        '<input class="metaDataVal form-control" type="text" id="val" value=' + valStr.replace(/ /g,"&nbsp;") +'></div>' +
+        '<input class="metaDataVal form-control" type="text" value=' + valStr.replace(/ /g,"&nbsp;") +'></div>' +
 
         '<div class="col-xs-1" style="margin-left:-15px;"><b>' + "<label for='val'>&nbsp;" + '</label></b>' +
         '<input type="button" value="Remove" class="remove btn btn-danger"></div></div>'

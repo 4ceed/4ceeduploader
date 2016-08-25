@@ -222,9 +222,9 @@
 											<label>Choose a name for your dataset:</label>
 											<input type="text" class="form-control datasetName" placeholder="Example... Sample Name, PECVD Oxide, Diffusion" required><br />
 
-<!-- 											<label>Dataset Description:</label>
-											<input type="text" class="form-control datasetDescription" name="datasetDescription" id="datasetDescription" placeholder="Example... Time, Temp, Pressure, Current"  ><br />
- -->
+ 											<label>Dataset Description:</label>
+											<input type="text" class="form-control datasetDescription" name="datasetDescription" id="datasetDescription" ><br />
+
 											<input type="button" value="Add New Field" class="btn btn-success btnAdd"/>	
 									    	<button type="button" class="clearTemplate btn btn-danger">Clear Template</button><br />
 									    	<hr />
@@ -284,7 +284,7 @@
 											</select>
 											<br />
 										</div>
-										<div class="otherOptions">
+										<div class="prevOptions">
 											<label>Choose a name for your Dataset:</label>
 											<input type="text" class="form-control datasetName" placeholder="Example... Sample Name, PECVD Oxide, Diffusion" required><br />
 											<input type="button" value="Add New Field" class="btn btn-success btnAdd"/>		
