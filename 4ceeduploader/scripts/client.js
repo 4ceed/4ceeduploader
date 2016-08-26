@@ -324,10 +324,9 @@ function getDatasets(collectionID, datasetID) {
 			if (len > 0){
 				//OPTIONAL
 				$('#datasets').removeAttr('disabled');
-
 				$('#datasets').addClass( "focusedInput" );	
 
-				}else{
+			}else{
 
 				//OPTIONAL
 			   	$('#datasets').attr("disabled", "disabled");	
@@ -450,7 +449,6 @@ function getPreviousDatasets(){
 }
 
 function getPreviousDataset(id){
-	console.log(id);
 	$.ajax({
 
 		url: baseURL + "t2c2/datasets/getDatasetAndTemplate/" + id + "",
@@ -752,9 +750,6 @@ function postTemplate(templateType, datasetID){
 			});
 
 			if (templateType === "false"){
-								console.log(datasetID);
-
-				console.log(data.id);
 				addTemplateToDataset(datasetID, data.id);
 			}
 			 // clear all the inputs in the new dataset field tabs
@@ -818,9 +813,6 @@ function postCollections() {
 
  			var newCollectionID = data.id
 
- 			//This is going to be deprecated soon 6/16
-			// postRootCollection(data.id, true);
-
 			//recreate tree	
 
 			//Can these collection events be moved to a class/method? 
@@ -882,30 +874,9 @@ function postCollections() {
 	})
 } 
 
-//Deprecating route soon. No longer necessary in api
-//Set collection to root
-// function postRootCollection(collectionID) {	
-
-// 	$.ajax({
-// 		url: clowderURL+"collections/"+collectionID+"",
-// 		type:"POST", 
-// 		beforeSend: function(xhr){
-//         	xhr.setRequestHeader("Authorization", "Basic " + btoa(username + ":" + password));
-// 		}, 
-// 		success: function(data){
-// 		}, 
-// 		error: function(xhr, status, error) {
-// 		}	
-// 	})
-// } 
-
 //Create NEW nested collection
 function postNestedCollection(collectionID, nestedCollectionName) {
 
-	// var collectionID = collectionID.toString(); 
-	// var nestedCollectionName = collectionName
-	console.log(collectionID); 
-	console.log(nestedCollectionName);
 	var nestedCollectionDescription = ""; //Add an optional label to jstree on create for a collection description
 
 	 $.ajax({
@@ -1019,7 +990,6 @@ function postDatasets() {
 	var datasetDescription = $("" + menuName + " .datasetDescription").val(); 
     var datasetName = $("" + menuName + " .datasetName").val(); 
     var currentNodeId = jQuery("#collections").jstree("get_selected");
-
 	$.ajax({
 		url:clowderURL+"datasets/createempty",
 		type:"POST", 
@@ -1046,8 +1016,7 @@ function postDatasets() {
 		     $(".prevOptions").hide(); 
 			 $('.datasetName').val('');			 
 			 $('.nav-tabs a:first').tab('show')
-
-			 getDatasets(currentNodeId, data.id); 
+			 getDatasets(currentNodeId.pop(), data.id); 
 
 			 var selectedMenu; 
 			 // var templateLength = ($(selectedMenu + " .templates").length);
@@ -1082,7 +1051,6 @@ function postDatasets() {
 		}			
 	})
 } 
-
 
 function addTemplateToDataset(datasetid, templateID){
 	var url = baseURL+ "t2c2/templates/" + templateID + "/attachToDataset/" + datasetid + ""; 

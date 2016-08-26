@@ -254,6 +254,11 @@
 
 												<label>Choose a name for your template:</label>
 												<input type="text" class="form-control datasetName" placeholder="<Example> Sample Name, PECVD Oxide, Diffusion" required><br />
+												
+
+												<label>Add a description:</label>
+												<input type="text" class="form-control datasetDescription" placeholder="<Example> User defined metadata for gold nano particles"><br />
+
 												<label>Create tags to describe your template: (optional)</label> 				
 												<span><a style="font-height:12px;" href="#" data-toggle="popover" title="Template Tags" data-trigger="hover" data-content="Tags allow users to search personal and global templates through descriptive tags." title=" ">
 												<span class="glyphicon glyphicon-question-sign"></a></span>	
