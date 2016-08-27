@@ -27,6 +27,60 @@ function hideDivs() {
 	$("#formGetDatasets").hide(); 
 }
 
+
+function rebuildTree(newCollectionID){
+
+	$("#collections").on("loaded.jstree", function(e, data){
+		$("#collections").jstree(true).check_node("#"+newCollectionID+"");
+
+	});
+
+	$("#collections").on("rename_node.jstree", function (e, data) {
+		console.log("is this renaming?");
+	 	// var numRootNodes = $('#collections').jstree(true)._model.data['#'].children.length;	
+		//if there is more then one root collection
+		// if (numRootNodes > 1){
+
+		 	// var currentNodeId = $("#collections").jstree("get_selected");
+			// var currentNodeId = getCurrentSelectedCollection()
+			var selectedText = data.node.text;
+			var currentParentId = getParentCollectionID(); 
+			postNestedCollection(currentParentId, selectedText); 
+			$('#collections').jstree("deselect_all");
+			$('#collections').jstree(true).check_node(data.node.id);	
+		// }
+	});
+
+	$("#collections").on("select_node.jstree", function(e, data){
+		 
+			var str = data.node.id;  
+			var res = str.match(/J/gi);
+		 	
+		 	//Prevents loading dataset for sub-collections that have no dataset yet
+		 	if (res != "j"){
+			 	getDatasets(data.node.id, ''); 
+		 	}
+			$("#fileSubmit").hide(); 
+			//not in other code
+			$("#formGetDatasets").removeClass("hidden");					
+			$("#formGetDatasets").show(); 
+		 	$(".validCollection").hide();
+	});
+
+	$("#collections").on("deselect_node.jstree", function(e, data){
+		$("#datasets").attr("disabled", "disabled");	
+		$("#datasets").empty(); 
+		$("#fileSubmit").hide(); 
+		$("#formGetDatasets").hide(); 
+	});
+
+	$("#collections").on("changed.jstree", function(e, data){
+		$("#fileSubmit").hide("slow"); 
+	});	
+}
+
+
+rebuildTree('');
 // setup the dialog and handle user idleness
 $("#dialog").dialog({
 	autoOpen: false,
@@ -70,31 +124,31 @@ $.idleTimeout('#dialog', 'div.ui-dialog-buttonpane button:first', {
 });
 
 //On collection selection/deselection pull in datasets, or clear datasets menu
-$("#collections").on("select_node.jstree", function(e, data){
+// $("#collections").on("select_node.jstree", function(e, data){
 		
-		var str = data.node.id;  
-		var res = str.match(/J/gi);
+// 		var str = data.node.id;  
+// 		var res = str.match(/J/gi);
 	 	
-	 	//Prevents loading dataset for sub-collections that have no dataset yet
-	 	if (res != "j"){
-			getDatasets(data.node.id, ''); 
-	 	}
+// 	 	//Prevents loading dataset for sub-collections that have no dataset yet
+// 	 	if (res != "j"){
+// 			getDatasets(str, ''); 
+// 	 	}
 		
-		$("#formGetDatasets").removeClass("hidden");					
-		$("#formGetDatasets").show(); 
-	 	$(".validCollection").hide("slow");
-});
+// 		$("#formGetDatasets").removeClass("hidden");					
+// 		$("#formGetDatasets").show(); 
+// 	 	$(".validCollection").hide("slow");
+// });
 
-$("#collections").on("deselect_node.jstree", function(e, data){
-	$("#datasets").attr("disabled", "disabled");	
-	$("#datasets").empty(); 
-	$("#fileSubmit").hide(); 
-	$("#formGetDatasets").hide(); 
-});
+// $("#collections").on("deselect_node.jstree", function(e, data){
+// 	$("#datasets").attr("disabled", "disabled");	
+// 	$("#datasets").empty(); 
+// 	$("#fileSubmit").hide(); 
+// 	$("#formGetDatasets").hide(); 
+// });
 
-$("#collections").on("changed.jstree", function(e, data){
-	$("#fileSubmit").hide("slow"); 
-});
+// $("#collections").on("changed.jstree", function(e, data){
+// 	$("#fileSubmit").hide("slow"); 
+// });
 
 //Set focus of textbox depending on what accordion is being shown
 $("#accordion1").on("shown.bs.collapse", function () {
@@ -126,14 +180,29 @@ $(".dsPanel").on('click', function() {
 	$(".collapse3").show(); 
 });
 
+function getCurrentSelectedCollection(){
+    var arr = jQuery("#collections").jstree("get_selected");
+    var str = arr.pop(); 
+    var currentNodeId = $.makeArray(str); 
+
+    return currentNodeId;
+}
+
+function getParentCollectionID(){
+    var arr = jQuery("#collections").jstree("get_selected");
+    arr.pop(); 
+    var  newArr = arr.pop()
+    var currentParentId = $.makeArray(newArr); 
+    return currentParentId;
+}
 //Nested collection created during jstree rename event
-$("#collections").on("rename_node.jstree", function (e, data) {
-    var currentNodeId = jQuery("#collections").jstree("get_selected");
-	var selectedText = data.node.text;
-	postNestedCollection(currentNodeId[0], selectedText); 
-	$('#collections').jstree("deselect_all");
-	$('#collections').jstree(true).check_node(data.node.id);
-});
+// $("#collections").on("rename_node.jstree", function (e, data) {
+//     var currentNodeId = jQuery("#collections").jstree("get_selected");
+// 	var selectedText = data.node.text;
+// 	postNestedCollection(currentNodeId[0], selectedText); 
+// 	$('#collections').jstree("deselect_all");
+// 	$('#collections').jstree(true).check_node(data.node.id);
+// });
 
 $("#datasets").change(function() {
 	setDatasetID = $("#datasets").val();
@@ -294,7 +363,6 @@ function createJSTrees(jsonData) {
 
 //Get datasets
 function getDatasets(collectionID, datasetID) {
-
 	$('#datasets').empty();
 
 	$.ajax({
@@ -722,7 +790,6 @@ $("#btnTemplate").on('click', function(e) {
 
 }); 
 
-
 //Posts new template
 function postTemplate(templateType, datasetID){
 	var menuName = $('.nav-tabs .active > a').attr("href");
@@ -802,7 +869,7 @@ function postCollections() {
 			  timer: 1500,
 			  showConfirmButton: false
 			});
-
+			console.log("posted a collection");
 			$("#collectionName").val('');
 			$("#collectionDescription").val('');
 			$("#collections").empty();
@@ -815,51 +882,53 @@ function postCollections() {
 
 			//recreate tree	
 
-			//Can these collection events be moved to a class/method? 
- 			$("#collections").jstree("destroy");
+			// //Can these collection events be moved to a class/method? 
+ 			// $("#collections").jstree("destroy");
 			getCollections(); 
+			// rebuildTree(''); 
 
-			$("#collections").on("loaded.jstree", function(e, data){
-				$("#collections").jstree(true).check_node("#"+newCollectionID+"");
+			// rebuildTree(newCollectionID); 
+			// $("#collections").on("loaded.jstree", function(e, data){
+			// 	$("#collections").jstree(true).check_node("#"+newCollectionID+"");
 
-			});
+			// });
 
-			$("#collections").on("rename_node.jstree", function (e, data) {
-			 	var numRootNodes = $('#collections').jstree(true)._model.data['#'].children.length;	
-				//if there is more then one root collection
-				if (numRootNodes > 1){
+			// $("#collections").on("rename_node.jstree", function (e, data) {
+			//  	var numRootNodes = $('#collections').jstree(true)._model.data['#'].children.length;	
+			// 	//if there is more then one root collection
+			// 	if (numRootNodes > 1){
 
-				 	var currentNodeId = $("#collections").jstree("get_selected");
+			// 	 	// var currentNodeId = $("#collections").jstree("get_selected");
+			// 		var currentNodeId = getCurrentSelectedCollection
+			// 		var selectedText = data.node.text;
+			// 		postNestedCollection(currentNodeId, selectedText); 
+			// 		$('#collections').jstree("deselect_all");
+			// 		$('#collections').jstree(true).check_node(data.node.id);	
 
-					var selectedText = data.node.text;
-					postNestedCollection(currentNodeId[0], selectedText); 
-					$('#collections').jstree("deselect_all");
-					$('#collections').jstree(true).check_node(data.node.id);	
+			// 	}
+			// });
 
-				}
-			});
-
-			$("#collections").on("select_node.jstree", function(e, data){
+			// $("#collections").on("select_node.jstree", function(e, data){
 				 
-					var str = data.node.id;  
-					var res = str.match(/J/gi);
+			// 		var str = data.node.id;  
+			// 		var res = str.match(/J/gi);
 				 	
-				 	//Prevents loading dataset for sub-collections that have no dataset yet
-				 	if (res != "j"){
-					 	getDatasets(data.node.id, ''); 
-				 	}
-					$("#fileSubmit").hide(); 
-					$("#formGetDatasets").removeClass("hidden");					
-					$("#formGetDatasets").show(); 
-				 	$(".validCollection").hide();
-			});
+			// 	 	//Prevents loading dataset for sub-collections that have no dataset yet
+			// 	 	if (res != "j"){
+			// 		 	getDatasets(data.node.id, ''); 
+			// 	 	}
+			// 		$("#fileSubmit").hide(); 
+			// 		$("#formGetDatasets").removeClass("hidden");					
+			// 		$("#formGetDatasets").show(); 
+			// 	 	$(".validCollection").hide();
+			// });
 
-			$("#collections").on("deselect_node.jstree", function(e, data){
-				$("#datasets").attr("disabled", "disabled");	
-				$("#datasets").empty(); 
-				$("#fileSubmit").hide(); 
-				$("#formGetDatasets").hide(); 
-			});
+			// $("#collections").on("deselect_node.jstree", function(e, data){
+			// 	$("#datasets").attr("disabled", "disabled");	
+			// 	$("#datasets").empty(); 
+			// 	$("#fileSubmit").hide(); 
+			// 	$("#formGetDatasets").hide(); 
+			// });
 
 		}, 
 		error: function(xhr, status, error) {
@@ -874,8 +943,9 @@ function postCollections() {
 	})
 } 
 
+
 //Create NEW nested collection
-function postNestedCollection(collectionID, nestedCollectionName) {
+function postNestedCollection(parentId, nestedCollectionName) {
 
 	var nestedCollectionDescription = ""; //Add an optional label to jstree on create for a collection description
 
@@ -887,7 +957,7 @@ function postNestedCollection(collectionID, nestedCollectionName) {
 			xhr.setRequestHeader("Accept", "application/json");
         	xhr.setRequestHeader("Authorization", "Basic " + btoa(username + ":" + password));
 		}, 
-		data: JSON.stringify({ name: nestedCollectionName, description: nestedCollectionDescription, parentId: collectionID }),
+		data: JSON.stringify({ name: nestedCollectionName, description: nestedCollectionDescription, parentId: parentId }),
 		
 		success: function(data){
 
@@ -898,46 +968,51 @@ function postNestedCollection(collectionID, nestedCollectionName) {
 			  timer: 1500,
 			  showConfirmButton: false
 			});
+			console.log("posted a nested collection");
 
 			//recreate tree	
- 			$("#collections").jstree("destroy");
+ 			// $("#collections").jstree("destroy");
 			getCollections(); 
  			var newCollectionID = data.id
+			// rebuildTree(''); 
 
-			$("#collections").on("loaded.jstree", function(e, data){
-				$("#collections").jstree(true).check_node("#"+newCollectionID+"");
-			});
+			// rebuildTree(newCollectionID); 
+			// $("#collections").on("loaded.jstree", function(e, data){
+			// 	$("#collections").jstree(true).check_node("#"+newCollectionID+"");
+			// });
 
-			$("#collections").on("rename_node.jstree", function (e, data) {
-			    var currentNodeId = $("#collections").jstree("get_selected");
-				var selectedText = data.node.text;
-				postNestedCollection(currentNodeId[0], selectedText); 
-				$('#collections').jstree("deselect_all");
-				$('#collections').jstree(true).check_node(data.node.id);
+			// $("#collections").on("rename_node.jstree", function (e, data) {
+			//     var currentNodeId = $("#collections").jstree("get_selected");
+			// 	var selectedText = data.node.text;
+			// 	postNestedCollection(currentNodeId.pop(), selectedText); 
+			// 				console.log("posted another nested collection");
 
-			});
+			// 	$('#collections').jstree("deselect_all");
+			// 	$('#collections').jstree(true).check_node(data.node.id);
 
-			$("#collections").on("select_node.jstree", function(e, data){
+			// });
+
+			// $("#collections").on("select_node.jstree", function(e, data){
 				 	
-					var str = data.node.id;  
-					var res = str.match(/J/gi);
+			// 		var str = data.node.id;  
+			// 		var res = str.match(/J/gi);
 				 	
-				 	//Prevents loading dataset for sub-collections that have no dataset yet
-				 	if (res != "j"){
-					 	getDatasets(data.node.id, ''); 
-				 	}				 	
-				 	$(".validCollection").hide();
-					$("#fileSubmit").hide(); 
-					$("#formGetDatasets").show(); 
+			// 	 	//Prevents loading dataset for sub-collections that have no dataset yet
+			// 	 	if (res != "j"){
+			// 		 	getDatasets(data.node.id, ''); 
+			// 	 	}				 	
+			// 	 	$(".validCollection").hide();
+			// 		$("#fileSubmit").hide(); 
+			// 		$("#formGetDatasets").show(); 
 
-			});
+			// });
 
-			$("#collections").on("deselect_node.jstree", function(e, data){
-				$("#datasets").attr("disabled", "disabled");	
-				$("#datasets").empty(); 
-				$("#fileSubmit").hide(); 
-				$("#formGetDatasets").hide(); 
-			});			
+			// $("#collections").on("deselect_node.jstree", function(e, data){
+			// 	$("#datasets").attr("disabled", "disabled");	
+			// 	$("#datasets").empty(); 
+			// 	$("#fileSubmit").hide(); 
+			// 	$("#formGetDatasets").hide(); 
+			// });			
 
 			postNestedCollectionToCollection(collectionID, data.id);
 
@@ -969,6 +1044,9 @@ function postNestedCollectionToCollection(collectionID, nestedCollectionID) {
 		}, 
 		data: JSON.stringify({ coll_id: collectionID, sub_coll_id: nestedCollectionID}),
 		success: function(data){
+
+										console.log("posted  nested collection to collection");
+
 		}, 
 		error: function(xhr, status, error) {
 			swal({
@@ -989,7 +1067,9 @@ function postDatasets() {
 	var menuName = $('.nav-tabs .active > a').attr("href");
 	var datasetDescription = $("" + menuName + " .datasetDescription").val(); 
     var datasetName = $("" + menuName + " .datasetName").val(); 
-    var currentNodeId = jQuery("#collections").jstree("get_selected");
+
+	var currentNodeId = getCurrentSelectedCollection();     
+
 	$.ajax({
 		url:clowderURL+"datasets/createempty",
 		type:"POST", 
@@ -1016,7 +1096,9 @@ function postDatasets() {
 		     $(".prevOptions").hide(); 
 			 $('.datasetName').val('');			 
 			 $('.nav-tabs a:first').tab('show')
-			 getDatasets(currentNodeId.pop(), data.id); 
+
+			 //This is not working with child collections. 
+			 getDatasets(currentNodeId, data.id); 
 
 			 var selectedMenu; 
 			 // var templateLength = ($(selectedMenu + " .templates").length);
