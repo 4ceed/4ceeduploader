@@ -27,58 +27,6 @@ function hideDivs() {
 	$("#formGetDatasets").hide(); 
 }
 
-
-function rebuildTree(newCollectionID){
-
-	$("#collections").on("loaded.jstree", function(e, data){
-		$("#collections").jstree(true).check_node("#"+newCollectionID+"");
-
-	});
-
-	$("#collections").on("rename_node.jstree", function (e, data) {
-	 	// var numRootNodes = $('#collections').jstree(true)._model.data['#'].children.length;	
-		//if there is more then one root collection
-		// if (numRootNodes > 1){
-		 	// var currentNodeId = $("#collections").jstree("get_selected");
-			// var currentNodeId = getCurrentSelectedCollection()
-			var selectedText = data.node.text;
-			var currentParentId = getParentCollectionID(); 
-			postNestedCollection(currentParentId, selectedText); 
-			$('#collections').jstree("deselect_all");
-			$('#collections').jstree(true).check_node(data.node.id);	
-		// }
-	});
-
-	$("#collections").on("select_node.jstree", function(e, data){
-		 
-			var str = data.node.id;  
-			var res = str.match(/J/gi);
-		 	
-		 	//Prevents loading dataset for sub-collections that have no dataset yet
-		 	if (res != "j"){
-			 	getDatasets(data.node.id, ''); 
-		 	}
-			$("#fileSubmit").hide(); 
-			//not in other code
-			$("#formGetDatasets").removeClass("hidden");					
-			$("#formGetDatasets").show(); 
-		 	$(".validCollection").hide();
-	});
-
-	$("#collections").on("deselect_node.jstree", function(e, data){
-		$("#datasets").attr("disabled", "disabled");	
-		$("#datasets").empty(); 
-		$("#fileSubmit").hide(); 
-		$("#formGetDatasets").hide(); 
-	});
-
-	$("#collections").on("changed.jstree", function(e, data){
-		$("#fileSubmit").hide("slow"); 
-	});	
-}
-
-
-rebuildTree('');
 // setup the dialog and handle user idleness
 $("#dialog").dialog({
 	autoOpen: false,
@@ -152,7 +100,8 @@ $(".dsPanel").on('click', function() {
 });
 
 function getCurrentSelectedCollection(){
-    var arr = jQuery("#collections").jstree("get_selected");
+    var arr = $("#collections").jstree("get_selected");
+    console.log("Current selected node is" + arr);
     var str = arr.pop(); 
     var currentNodeId = $.makeArray(str); 
 
@@ -160,10 +109,11 @@ function getCurrentSelectedCollection(){
 }
 
 function getParentCollectionID(){
-    var arr = jQuery("#collections").jstree("get_selected");
+    var arr = $("#collections").jstree("get_selected");
     arr.pop(); 
     var  newArr = arr.pop()
     var currentParentId = $.makeArray(newArr); 
+    console.log(currentParentId + " is the current Parent Collection");
     return currentParentId;
 }
 
@@ -202,7 +152,7 @@ function sortJsonDatasetName(a,b){
 };
 
 //Get collections
-function getCollections(collectionName, collectionID) {
+function getCollections(newCollectionID) {
 	$.ajax({
 		url: clowderURL+"collections/allCollections",
 		dataType: "json",
@@ -219,7 +169,7 @@ function getCollections(collectionName, collectionID) {
 				$(".showInfo").show()
 				$(".showSearch").show()
 
-				createJSTrees(data);
+				createJSTrees(data, newCollectionID);
 
 			}else{
 				
@@ -244,7 +194,7 @@ function getCollections(collectionName, collectionID) {
 }
 
 //Create tree from js object
-function createJSTrees(jsonData) {
+function createJSTrees(jsonData, newCollectionID) {
 	for(var i = 0; i < jsonData.length; i++){
 
 		//create library supported key names (text,parent)
@@ -321,6 +271,48 @@ function createJSTrees(jsonData) {
 		],
 
 	});
+
+	$("#collections").on("loaded.jstree", function(e, data){
+		$("#collections").jstree(true).check_node("#"+newCollectionID+"");
+
+	});
+
+	$("#collections").on("rename_node.jstree", function (e, data) {
+			var selectedText = data.node.text;
+			var currentParentId = getParentCollectionID(); 
+			postNestedCollection(currentParentId, selectedText); 
+			$('#collections').jstree("deselect_all");
+			$('#collections').jstree(true).check_node(data.node.id);	
+	});
+
+	$("#collections").on("select_node.jstree", function(e, data){
+		 
+			var str = data.node.id;  
+			var res = str.match(/J/gi);
+		 	console.log(str);
+		 	//Prevents loading dataset for sub-collections that have no dataset yet
+		 	if (res != "j"){
+			 	getDatasets(data.node.id, ''); 
+		 	}
+			$("#fileSubmit").hide(); 
+
+			//not in other code
+			$("#formGetDatasets").removeClass("hidden");					
+			$("#formGetDatasets").show(); 
+		 	$(".validCollection").hide();
+	});
+
+	$("#collections").on("deselect_node.jstree", function(e, data){
+		$("#datasets").attr("disabled", "disabled");	
+		$("#datasets").empty(); 
+		$("#fileSubmit").hide(); 
+		$("#formGetDatasets").hide(); 
+	});
+
+	$("#collections").on("changed.jstree", function(e, data){
+		$("#fileSubmit").hide("slow"); 
+	});	
+
 
 }    
 
@@ -526,7 +518,6 @@ function showGlobalTemplates(templatesData) {
 function showTagTemplates(data){
 
 	$('<option>').val('').text('--Select One--').appendTo('.tagTemplates');
-
 	$.each(data, function(key, val) {
 		$(".tagTemplates").append($("<option class='placeholder'></option>").val(val.template_id).html(val.name));
 	}); 
@@ -811,7 +802,7 @@ function postTemplate(templateType, datasetID){
 }
 
 //Create NEW ROOT collection
-function postCollections() {
+function postRootCollection() {
 	var collectionName = $('#collectionName').val();
 	var collectionDescription = $('#collectionDescription').val();
 
@@ -832,7 +823,7 @@ function postCollections() {
 			  timer: 1500,
 			  showConfirmButton: false
 			});
-			console.log("posted a collection");
+			// console.log("posted a root collection " + data.id);
 			$("#collectionName").val('');
 			$("#collectionDescription").val('');
 			$("#collections").empty();
@@ -844,11 +835,8 @@ function postCollections() {
  			var newCollectionID = data.id
 
 			//recreate tree	
-
-			// //Can these collection events be moved to a class/method? 
  			$("#collections").jstree("destroy");
-			getCollections(); 
-			rebuildTree(newCollectionID);
+			getCollections(newCollectionID); 
 
 	}, 
 		error: function(xhr, status, error) {
@@ -890,10 +878,11 @@ function postNestedCollection(parentId, nestedCollectionName) {
 			});
 
 			//recreate tree	
- 			$("#collections").jstree("destroy");
-			getCollections(); 
- 			var newCollectionID = data.id
-			rebuildTree(newCollectionID); 
+ 		// 	$("#collections").jstree("destroy");
+ 		// 	var newCollectionID = data.id
+			// getCollections(newCollectionID); 
+
+			// console.log("posted a sub collection, parent => " + parentId + ", child => " + newCollectionID );
 
 			postNestedCollectionToCollection(parentId, data.id);
 
@@ -910,7 +899,7 @@ function postNestedCollection(parentId, nestedCollectionName) {
 	})
 } 
 
-//Create NEW dataset and associate it with a collection
+//Create NEW child collection and associate it with a collection
 function postNestedCollectionToCollection(parentId, nestedCollectionID) {
 	var url = clowderURL+"collections/"+parentId+"/addSubCollection/"+nestedCollectionID+"";
 
@@ -925,12 +914,12 @@ function postNestedCollectionToCollection(parentId, nestedCollectionID) {
 		}, 
 		data: JSON.stringify({ coll_id: parentId, sub_coll_id: nestedCollectionID}),
 		success: function(data){
+			
+			console.log("posted the sub to the root collection, parent => " + parentId + ", child => " + nestedCollectionID );
 
  			$("#collections").jstree("destroy");
-			getCollections(); 
  			var newCollectionID = data.id
-			rebuildTree(nestedCollectionID); 
-
+			getCollections(newCollectionID); 
 		}, 
 		error: function(xhr, status, error) {
 			swal({
@@ -1230,7 +1219,7 @@ $(".btnDataset").on('click', function(e) {
 //Validate collections 
 $("#formGetCollections").validate({
     submitHandler: function() {
-		postCollections(); 
+		postRootCollection(); 
     }
 });
 
