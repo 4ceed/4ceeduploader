@@ -101,16 +101,8 @@ $(".dsPanel").on('click', function() {
 
 function getCurrentSelectedCollection(){
     var arr = $("#collections").jstree("get_selected");
-    var currentArr = []; 
-    //itereate over arr
-    //get the collections 
-    // console.log("Current selected node is" + arr);
-    var str = arr.pop(); 
-    var currentNodeId = $.makeArray(str); 
-
-    return currentNodeId;
+    return arr;
 }
-
 
 $("#datasets").change(function() {
 	setDatasetID = $("#datasets").val();
@@ -484,13 +476,13 @@ function getPreviousDatasets(){
 			showPreviousDatasets(data); 
 		}, 
 		error: function(xhr, status, error) {
-			swal({
-			  title: "Error", 
-			  text: "There was a problem returning previous datasets",
-			  type: "error",
-			  timer: 1500,
-			  showConfirmButton: false
-			});
+			// swal({
+			//   title: "Error", 
+			//   text: "There was a problem returning previous datasets",
+			//   type: "error",
+			//   timer: 1500,
+			//   showConfirmButton: false
+			// });
 		}	
 	})	 
 }
@@ -786,18 +778,31 @@ function postTemplate(templateType, datasetID){
         	xhr.setRequestHeader("Authorization", "Basic " + btoa(username + ":" + password));
 		}, 
 		success: function(data){
-			swal({
-			  title: "Success", 
-			  text: "A new template was created",
-			  type: "success",
-			  timer: 1500,
-			  showConfirmButton: false
-			});
+
 
 			if (templateType === "false"){
+
+				swal({
+				  title: "Success", 
+				  text: "A new dataset was created",
+				  type: "success",
+				  timer: 1500,
+				  showConfirmButton: false
+				});
+
+
 				addTemplateToDataset(datasetID, data.id);
-			}
+			}else{
+				swal({
+				  title: "Success", 
+				  text: "A new template was created",
+				  type: "success",
+				  timer: 1500,
+				  showConfirmButton: false
+				});
+
 			 // clear all the inputs in the new dataset field tabs
+			}
 			$(".templateData").empty();
 			$(".metaDataSettings").empty();
 			$(".templates").empty(); 	
@@ -923,9 +928,7 @@ function postDatasets() {
 	var menuName = $('.nav-tabs .active > a').attr("href");
 	var datasetDescription = $("" + menuName + " .datasetDescription").val(); 
     var datasetName = $("" + menuName + " .datasetName").val(); 
-
 	var currentNodeId = getCurrentSelectedCollection();     
-
 	$.ajax({
 		url:clowderURL+"datasets/createempty",
 		type:"POST", 
@@ -937,46 +940,61 @@ function postDatasets() {
 		data: JSON.stringify({ name: datasetName, description: datasetDescription, authorId: author, collection: currentNodeId}),
 		success: function(data){
 
-			 if (menuName != "#basicMenu"){
+			 if (menuName = "#basicMenu"){
 				 postTemplate(false, data.id);	
-			 }		
+				 getDatasets(currentNodeId, data.id); 
+				 $('#collapse4').collapse('hide');
+				 $('#collapse3').collapse('show');
+				 $('#datasets').empty();
+				 $('.datasetDescription').val('');
+			     $(".templateData").empty();
+			     $(".metaDataSettings").empty();	
+				 $("#fileSubmit").removeClass("hidden");					
+			     $("#fileSubmit").show("slow"); 
+			     $(".prevOptions").hide(); 
+				 $('.datasetName').val('');			 
+				 $('.nav-tabs a:first').tab('show')
 
-			 $('#collapse4').collapse('hide');
-			 $('#collapse3').collapse('show');
-			 $('#datasets').empty();
-			 $('.datasetDescription').val('');
-		     $(".templateData").empty();
-		     $(".metaDataSettings").empty();	
-			 $("#fileSubmit").removeClass("hidden");					
-		     $("#fileSubmit").show("slow"); 
-		     $(".prevOptions").hide(); 
-			 $('.datasetName').val('');			 
-			 $('.nav-tabs a:first').tab('show')
+			 }else{	
 
-			 //This is not working with child collections. 
-			 getDatasets(currentNodeId, data.id); 
+				 var selectedMenu; 
+				 console.log(menuName);
+				 var templateLength = ($(menuName + " .templates option").length);
+				 var globalTemplateLength = ($(menuName + " .globalTemplates option").length);
+				 var tagTemplateLength = ($(menuName + " .tagTemplates option").length);
+				 console.log(templateLength);
+				 console.log(globalTemplateLength);
+				 console.log(tagTemplateLength);
+				 // alert( $('#example option').length )
 
-			 var selectedMenu; 
-			 // var templateLength = ($(selectedMenu + " .templates").length);
-			 // var globalTemplateLength = ($(selectedMenu + " .globalTemplates").length);
-			 // var tagTemplateLength = ($(selectedMenu + " .tagTemplates").length);
-			 // console.log(templateLength);
-			 // console.log(globalTemplateLength);
-			 // console.log(tagTemplateLength);
+				 if ($(templateLength > 1)){
+				 	selectedMenu = " .templates";
+				 }else if ($(globalTemplateLength > 1)){
+				 	selectedMenu = " .globalTemplates";
+				 }else if ($(tagTemplateLength > 1)){
+				 	selectedMenu = " .tagTemplates";
+				 }else{
+				 	selectedMenu = " .templates";
+				 }
+				 console.log(selectedMenu);
+				 addTemplateToDataset(data.id, $("" + selectedMenu + "").val());
+
+				getDatasets(currentNodeId, data.id); 
+
+				 $('#collapse4').collapse('hide');
+				 $('#collapse3').collapse('show');
+				 $('#datasets').empty();
+				 $('.datasetDescription').val('');
+			     $(".templateData").empty();
+			     $(".metaDataSettings").empty();	
+				 $("#fileSubmit").removeClass("hidden");					
+			     $("#fileSubmit").show("slow"); 
+			     $(".prevOptions").hide(); 
+				 $('.datasetName').val('');			 
+				 $('.nav-tabs a:first').tab('show')
 
 
-			 // if ($(templateLength).length){
-			 // 	selectedMenu = " .templates";
-			 // }else if ($(globalTemplateLength).length){
-			 // 	selectedMenu = " .globalTemplates";
-			 // }else if ($(tagTemplateLength).length){
-			 // 	selectedMenu = " .tagTemplates";
-			 // }else{
-
-			 // }
-			 // console.log(selectedMenu);
-			 // addTemplateToDataset(data.id, $("" + selectedMenu + "").val());
-
+				}
 		}, 
 		error: function(xhr, status, error) {
 			swal({
@@ -986,7 +1004,9 @@ function postDatasets() {
 			  timer: 1500,
 			  showConfirmButton: false
 			});
-		}			
+		}	
+
+
 	})
 } 
 
