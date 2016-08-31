@@ -29,14 +29,14 @@
 		<![endif]-->
 	</head>
 	<body>
-
 		<div class="container">
+
 			<div class="header clearfix"></div>
 			<div class="panel-group" id="accordion1">
 				<div class="panel panel-default">
 					<div class="panel-heading panel-info ">
-						<h3 class="panel-title ">
-							Sign In
+						<h3 class="panel-title">
+							<center>4CeeD Uploader </center>
 						</h3>
 					</div>
 				</div>
@@ -45,7 +45,7 @@
 				<span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
 				<span class="sr-only">Error:</span>
 				User not authorized. <br />
-				Please create an account, or if this is your first time please accept the terms of service by logging in to the <a href="https://4ceed.illinois.edu">curator.</a>
+				Please create an account, or reset your password in the 4CeeD <a href="https://4ceed.illinois.edu">curator.</a>
 			</div>				
 			<div class="jumbotron">
 				<form method="" id="formLogin" action="">
@@ -65,7 +65,6 @@
 				</form>
 			</div>
 			<footer class="footer">
-				<p>4CeeD - 2015</p>
 			</footer>
 		</div>
 		<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
@@ -153,7 +152,7 @@
 				    url: 'session_setter.php',
 				    data: {username: username, password: password, fullname: fullname, clowderURL: clowderURL, baseURL:  baseURL, homeURL: homeURL}, 
 					success: function(data) {
-						window.location.href = homeURL; // "http://127.0.0.1:8888/index.php";				
+						window.location.href = homeURL; 			
 					}, 
 					error: function(xhr, status, error) {
 						$("#displayMsg").show()

@@ -476,13 +476,6 @@ function getPreviousDatasets(){
 			showPreviousDatasets(data); 
 		}, 
 		error: function(xhr, status, error) {
-			// swal({
-			//   title: "Error", 
-			//   text: "There was a problem returning previous datasets",
-			//   type: "error",
-			//   timer: 1500,
-			//   showConfirmButton: false
-			// });
 		}	
 	})	 
 }
@@ -617,14 +610,6 @@ function createBoxes(data){
   	$(".otherOptions").show();
 
   	//Get current tab and use name to determine what the label will say based on it's tab
-  	var menuName = $('.nav-tabs .active > a').attr("href");
-	var txt = ""; 
-	if (menuName == "#custMenu"){
-		txt = 1; 
-	}else{
-		txt = 0; 
-	}
-
 	$.each(data.terms, function(key, val) {
         var div = $("<div />");
         div.html(createDiv(val.key, val.default_value, val.units, val.data_type));
@@ -634,6 +619,7 @@ function createBoxes(data){
 }
 
 function createBoxesForPreviousDataset(data){
+
     $(".templateData").empty();
   	$(".btnDataset").show();
 	$(".btnAdd").show();
@@ -800,7 +786,6 @@ function postTemplate(templateType, datasetID){
 				  timer: 1500,
 				  showConfirmButton: false
 				});
-
 			 // clear all the inputs in the new dataset field tabs
 			}
 			$(".templateData").empty();
@@ -958,15 +943,9 @@ function postDatasets() {
 			 }else{	
 
 				 var selectedMenu; 
-				 console.log(menuName);
 				 var templateLength = ($(menuName + " .templates option").length);
 				 var globalTemplateLength = ($(menuName + " .globalTemplates option").length);
 				 var tagTemplateLength = ($(menuName + " .tagTemplates option").length);
-				 console.log(templateLength);
-				 console.log(globalTemplateLength);
-				 console.log(tagTemplateLength);
-				 // alert( $('#example option').length )
-
 				 if ($(templateLength > 1)){
 				 	selectedMenu = " .templates";
 				 }else if ($(globalTemplateLength > 1)){
@@ -976,10 +955,9 @@ function postDatasets() {
 				 }else{
 				 	selectedMenu = " .templates";
 				 }
-				 console.log(selectedMenu);
 				 addTemplateToDataset(data.id, $("" + selectedMenu + "").val());
 
-				getDatasets(currentNodeId, data.id); 
+				 getDatasets(currentNodeId, data.id); 
 
 				 $('#collapse4').collapse('hide');
 				 $('#collapse3').collapse('show');
@@ -1352,31 +1330,34 @@ function createDiv(keyName, val, units, dataType) {
     var valStr = jQuery.trim(val);
     var valUnits = jQuery.trim(units);
     var valType = jQuery.trim(dataType);
-    var txtToWrite = "Default Value: (optional)";
+  	var menuName = $('.nav-tabs .active > a').attr("href");
+  	console.log(menuName);
+    var txtToWrite = "";
+    if (menuName == "#createMenu"){
+    	txtToWrite = "Default Value: (optional)";
+    }else{
+    	txtToWrite = "Default Value: "
+    }
+
     var txtString = dataType == "string" ? "<option value='string' selected>String</option>" : "<option value='string'>String</option>"; 
     var txtNumber = dataType == "number" ? "<option value='number' selected>Number</option>" : "<option value='number'>Number</option>"; 
     var txtBoolean = dataType == "boolean" ? "<option value='boolean' selected>Boolean</option>" : "<option value='boolean'>Boolean</option>"; 
 
-    // console.log(valKeyName + "\n");
-    // console.log(valStr + "\n");
-    // console.log(valUnits + "\n");
-    // console.log(valType + "\n");
-    
     return '<div class="row top-buffer"><div class="col-xs-4"><b>' + "<label for='name'>Name: " + '</label></b></span>' +
-        '<input class="metaDataKey form-control" type="text" value=' + valKeyName.replace(/ /g,"&nbsp;") +'></div>' +
+        '<input class="metaDataKey form-control" required type="text" value=' + valKeyName.replace(/ /g,"&nbsp;") +'></div>' +
 
         '<div class="col-xs-2"><b>' + "<label for='name'>Unit Type: " + '</label></b></span>' +
-        '<input class="metaDataUnit form-control" type="text" value=' + valUnits.replace(/ /g,"&nbsp;") +'></div>' +
+        '<input class="metaDataUnit form-control" required type="text" value=' + valUnits.replace(/ /g,"&nbsp;") +'></div>' +
 
         '<div class="col-xs-2" style=""><b>' + "<label for='val'>Data Type: " + '</label></b>' +
-        '<select class="metaDataType form-control">' +
+        '<select class="metaDataType form-control" required>' +
         '' + txtString + '' + 
         '' + txtNumber + '' + 
         '' + txtBoolean + '' + 
         '</select></div>' +
 
         '<div class="col-xs-3" style="margin-left:-15px;"><b>' + "<label for='val'>"+txtToWrite + '</label></b>' +
-        '<input class="metaDataVal form-control" type="text" value=' + valStr.replace(/ /g,"&nbsp;") +'></div>' +
+        '<input class="metaDataVal form-control" required type="text" value=' + valStr.replace(/ /g,"&nbsp;") +'></div>' +
 
         '<div class="col-xs-1" style="margin-left:-15px;"><b>' + "<label for='val'>&nbsp;" + '</label></b>' +
         '<input type="button" value="Remove" class="remove btn btn-danger"></div></div>'
