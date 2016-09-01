@@ -608,7 +608,7 @@ function createBoxes(data){
 	$(".btnAdd").show();
   	$("#btnTemplate").show();
   	$(".otherOptions").show();
-
+  	var menuName = $('.nav-tabs .active > a').attr("href");
   	//Get current tab and use name to determine what the label will say based on it's tab
 	$.each(data.terms, function(key, val) {
         var div = $("<div />");
@@ -625,6 +625,7 @@ function createBoxesForPreviousDataset(data){
 	$(".btnAdd").show();
   	$("#btnTemplate").show();
   	$(".prevOptions").show();
+  	
 	$.each(data.template.terms, function(i, val) {
 		var div = $("<div />");
         div.html(createDiv(val.key, val.default_value, val.units, val.data_type));
@@ -1331,7 +1332,6 @@ function createDiv(keyName, val, units, dataType) {
     var valUnits = jQuery.trim(units);
     var valType = jQuery.trim(dataType);
   	var menuName = $('.nav-tabs .active > a').attr("href");
-  	console.log(menuName);
     var txtToWrite = "";
     if (menuName == "#createMenu"){
     	txtToWrite = "Default Value: (optional)";
