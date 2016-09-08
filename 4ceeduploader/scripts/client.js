@@ -328,7 +328,6 @@ function createJSTrees(jsonData, newCollectionID) {
 		$("#fileSubmit").hide("slow"); 
 	});	
 
-
 }    
 
 //Get datasets
@@ -1181,6 +1180,9 @@ $(".custMenu, .createMenu, .clearMenu, .prevMenu").on('click', function() {
 }); 
 
 $(".btnDataset").on('click', function(e) {
+
+  	var menuName = $('.nav-tabs .active > a').attr("href");
+
 	var jsTreeValid = false; 
 
 	// work around for jstree validation 
@@ -1193,10 +1195,72 @@ $(".btnDataset").on('click', function(e) {
 		jstreeValid = true; 
 	}
 
+	$("#formGetDatasets").validate({ 
+	});
+
+	datasetRequiredFields(); 
+
 	if ($("#formGetDatasets").valid() && jstreeValid == true){
 		postDatasets(e); 
 	}
 });	
+
+function datasetRequiredFields(){
+
+	//If there is a value, then require the previous 3 fields. 
+	$(".metaDataVal").each(function (idx) {
+			var counter = (idx + 1).toString(); 
+			if ($(this).val() != '') {
+
+				$("#metaDataKey" + counter).rules('add', {
+					required: true, 
+				    maxlength: 50
+				}); 
+
+				$("#metaDataUnit" + counter).each(function () {
+				    $(this).rules('add', {
+				        required: true, 
+				        maxlength: 50
+				    });
+				});
+
+				$("#metaDataType" + counter).each(function () {
+				    $(this).rules('add', {
+				        required: true
+				    });
+				});	
+
+				var type = $("#metaDataType" + counter + " option:selected").val(); 
+
+				switch(type){
+					case 'number':
+						$(this).rules('add', {
+							number: true, 
+		 					maxlength: 20					
+						}); 
+					    $(this).rules('remove',"equals");
+       					break;
+
+					case 'boolean':
+						$(this).rules('add', {
+							equals: ["true", "false"]
+						}); 
+					    $(this).rules('remove',"number");
+        				break;
+
+					case 'string':
+						$(this).rules('add', {
+							maxlength: 50
+						}); 
+       					break;
+
+				}
+
+
+			}	
+	});
+
+}
 
 //Validate collections 
 $("#formGetCollections").validate({
@@ -1325,13 +1389,21 @@ $('.search-input').keydown(function (e) {
 	}
 });
 
+//Closure used for assigning a unique id for dynamic inputs in createDiv
+var add = (function () {
+    var counter = 0;
+    return function () {return counter += 1;}
+})();
+
 //Create dynamic textbox
 function createDiv(keyName, val, units, dataType) {
-    var valKeyName = jQuery.trim(keyName);
-    var valStr = jQuery.trim(val);
-    var valUnits = jQuery.trim(units);
-    var valType = jQuery.trim(dataType);
+    var valKeyName = $.trim(keyName);
+    var valStr = $.trim(val);
+    var valUnits = $.trim(units);
+    var valType = $.trim(dataType);
   	var menuName = $('.nav-tabs .active > a').attr("href");
+
+  	//format text 
     var txtToWrite = "";
     if (menuName == "#createMenu"){
     	txtToWrite = "Default Value: (optional)";
@@ -1339,29 +1411,32 @@ function createDiv(keyName, val, units, dataType) {
     	txtToWrite = "Default Value: "
     }
 
+    var i = add(); 
     var txtString = dataType == "string" ? "<option value='string' selected>String</option>" : "<option value='string'>String</option>"; 
     var txtNumber = dataType == "number" ? "<option value='number' selected>Number</option>" : "<option value='number'>Number</option>"; 
     var txtBoolean = dataType == "boolean" ? "<option value='boolean' selected>Boolean</option>" : "<option value='boolean'>Boolean</option>"; 
 
     return '<div class="row top-buffer"><div class="col-xs-4"><b>' + "<label for='name'>Name: " + '</label></b></span>' +
-        '<input class="metaDataKey form-control" required type="text" value=' + valKeyName.replace(/ /g,"&nbsp;") +'></div>' +
+        '<input class="metaDataKey form-control" name="metaDataKey' + i + '" id="metaDataKey' + i + '" type="text" value=' + valKeyName.replace(/ /g,"&nbsp;") +'></div>' +
 
         '<div class="col-xs-2"><b>' + "<label for='name'>Unit Type: " + '</label></b></span>' +
-        '<input class="metaDataUnit form-control" required type="text" value=' + valUnits.replace(/ /g,"&nbsp;") +'></div>' +
+        '<input class="metaDataUnit form-control" name="metaDataUnit' + i + '" id="metaDataUnit' + i + '" type="text" value=' + valUnits.replace(/ /g,"&nbsp;") +'></div>' +
 
         '<div class="col-xs-2" style=""><b>' + "<label for='val'>Data Type: " + '</label></b>' +
-        '<select class="metaDataType form-control" required>' +
+        '<select class="metaDataType form-control" name="metaDataType' + i + '" id="metaDataType' + i + '" >' +
         '' + txtString + '' + 
         '' + txtNumber + '' + 
         '' + txtBoolean + '' + 
         '</select></div>' +
 
-        '<div class="col-xs-3" style="margin-left:-15px;"><b>' + "<label for='val'>"+txtToWrite + '</label></b>' +
-        '<input class="metaDataVal form-control" required type="text" value=' + valStr.replace(/ /g,"&nbsp;") +'></div>' +
+        '<div class="col-xs-3" style="margin-left:-15px;"><b>' + "<label for='val'>"+ txtToWrite + '</label></b>' +
+        '<input class="metaDataVal form-control" name="metaDataVal' + i + '" id="metaDataVal' + i + '" type="text" value=' + valStr.replace(/ /g,"&nbsp;") +'></div>' +
 
         '<div class="col-xs-1" style="margin-left:-15px;"><b>' + "<label for='val'>&nbsp;" + '</label></b>' +
         '<input type="button" value="Remove" class="remove btn btn-danger"></div></div>'
 
 }
 
-
+$.validator.addMethod("equals", function(value, element, string) {
+    return $.inArray(value, string) !== -1;
+}, $.validator.format("Please enter {0} or {1}"));

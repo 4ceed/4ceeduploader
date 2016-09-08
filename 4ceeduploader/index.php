@@ -284,13 +284,18 @@
 								  <div id="prevMenu" class="tab-pane fade">
 								    <div class="form-group">
 								    	<div class="showTemplates">
-											<label>Load previous dataset:</label><br />
+											<label>Load previous dataset: 											
+												<span><a style="font-height:12px;" href="#" data-toggle="popover" title="Load Previous Datasets" data-trigger="hover" data-content="Create a NEW dataset from one of your previous 10 datasets. Useful for large collections where only one or more values changes each time." title=" ">
+												<span class="glyphicon glyphicon-question-sign"></a></span>	
+											</label><br />
+
+
 											<select class="form-control prevTemplates">
 											</select>
 											<br />
 										</div>
 										<div class="prevOptions">
-											<label>Choose a name for your Dataset:</label>
+											<label>Choose a name for the NEW Dataset:</label>
 											<input type="text" class="form-control datasetName" placeholder="Example... Sample Name, PECVD Oxide, Diffusion" required><br />
 											<input type="button" value="Add New Field" class="btn btn-success btnAdd"/>		
 									    	<button class="btn btn-danger clearTemplate" type="button">Clear Template</button><br /><br />
