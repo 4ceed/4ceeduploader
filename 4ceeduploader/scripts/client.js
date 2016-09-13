@@ -646,6 +646,8 @@ function clearTemplate(){
 	$(".templateSearch").val(""); 
 	$(".tagTemplates").val(""); 
 	$(".tagData").hide(); 
+	counter1.reset();
+
 }
 
 //Run when the clear template button is clicked
@@ -739,6 +741,8 @@ $(".clearMenu").click(function(){
 
 //Create a new template
 $("#btnTemplate").on('click', function(e) {
+
+	datasetRequiredFields(); 
 
 	if ($("#formGetDatasets").valid()){
 		postTemplate(true, ''); 
@@ -1177,12 +1181,16 @@ $(".custMenu, .createMenu, .clearMenu, .prevMenu").on('click', function() {
 	validator.resetForm();
 	$("label.error").hide();
     $(".error").removeClass("error");	
+
+	counter1.reset();
+
 }); 
+
+$("#formGetDatasets").validate();
 
 $(".btnDataset").on('click', function(e) {
 
   	var menuName = $('.nav-tabs .active > a').attr("href");
-
 	var jsTreeValid = false; 
 
 	// work around for jstree validation 
@@ -1195,9 +1203,6 @@ $(".btnDataset").on('click', function(e) {
 		jstreeValid = true; 
 	}
 
-	$("#formGetDatasets").validate({ 
-	});
-
 	datasetRequiredFields(); 
 
 	if ($("#formGetDatasets").valid() && jstreeValid == true){
@@ -1207,15 +1212,22 @@ $(".btnDataset").on('click', function(e) {
 
 function datasetRequiredFields(){
 
-	//If there is a value, then require the previous 3 fields. 
-	$(".metaDataVal").each(function (idx) {
-			var counter = (idx + 1).toString(); 
-			if ($(this).val() != '') {
+
+		$.each($('.metaDataVal'), function(idx) {
+
+			var currentId = (this.id);
+			var counter = currentId.match(/\d+/); 
+			var currentElementValue = $(this).val(); 
+
+			if ($.trim(currentElementValue).length > 0) {
 
 				$("#metaDataKey" + counter).rules('add', {
 					required: true, 
 				    maxlength: 50
 				}); 
+						
+
+				var type = $("#metaDataType" + counter + " option:selected").val(); 
 
 				$("#metaDataUnit" + counter).each(function () {
 				    $(this).rules('add', {
@@ -1256,8 +1268,7 @@ function datasetRequiredFields(){
 
 				}
 
-
-			}	
+			}
 	});
 
 }
@@ -1290,7 +1301,6 @@ function buildTemplate(idName) {
     return(arr);
 
 }
-
 
 //Auto complete dataset field
 $(function() {
@@ -1350,10 +1360,14 @@ $(function () {
 		];
 
         var div = $("<div />");
+  		var menuName = $('.nav-tabs .active > a').attr("href");
+
         div.html(createDiv(" "));
+		// $("#prevMenu .templateData").append(div);
+
 
 		//Future: check and see if any classes with this value exist already before making another input
-        $(".metaDataSettings").append(div);
+        $(menuName + " .metaDataSettings").append(div);
 		$(".metaDataKey").first().focus(); 
 		$(".existingDS").show(); 
 		$(".btnDataset").show();
@@ -1389,11 +1403,20 @@ $('.search-input').keydown(function (e) {
 	}
 });
 
-//Closure used for assigning a unique id for dynamic inputs in createDiv
-var add = (function () {
-    var counter = 0;
-    return function () {return counter += 1;}
-})();
+function counter() {
+   var count = 0;
+
+   this.reset = function() {
+       count = 0;
+       return count;
+   };
+
+   this.add = function() {
+       return ++count;
+   };
+}
+
+var counter1 = new counter();
 
 //Create dynamic textbox
 function createDiv(keyName, val, units, dataType) {
@@ -1411,7 +1434,8 @@ function createDiv(keyName, val, units, dataType) {
     	txtToWrite = "Default Value: "
     }
 
-    var i = add(); 
+	var i = counter1.add();    
+	console.log(i);
     var txtString = dataType == "string" ? "<option value='string' selected>String</option>" : "<option value='string'>String</option>"; 
     var txtNumber = dataType == "number" ? "<option value='number' selected>Number</option>" : "<option value='number'>Number</option>"; 
     var txtBoolean = dataType == "boolean" ? "<option value='boolean' selected>Boolean</option>" : "<option value='boolean'>Boolean</option>"; 
@@ -1440,3 +1464,10 @@ function createDiv(keyName, val, units, dataType) {
 $.validator.addMethod("equals", function(value, element, string) {
     return $.inArray(value, string) !== -1;
 }, $.validator.format("Please enter {0} or {1}"));
+
+// $.validator.setDefaults({
+//     ignore: ""
+// });
+
+
+
