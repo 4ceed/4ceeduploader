@@ -41,6 +41,7 @@
 		  	window.location.href = "4ceeduploader/login.php";				
 		  }
 		</script>
+
 	</head>
 	<body>
 
@@ -56,7 +57,7 @@
  			<h3 class="text-muted username"></h3>
  			<h5 class="text-muted logout error"></h5>
  			<h5 class="text-muted timer error"></h5>
-
+ 			<hr />
  		</div>
 		<!-- dialog window markup -->
 		<div id="dialog" title="Your session is about to expire!" class="hidden">
@@ -70,12 +71,12 @@
 
 		<!-- Collection --> 
 		<form id="formGetCollections" class="" method="get" action="" name="clientForm">
-			<div class="jumbotron">
-				<div class="form-group colPanel">
-					<img src="4ceeduploader/images/one.jpg" width="50px">
-					<label style="padding-left:10px;">Choose a collection...</label>
-					<span><a style="font-height:12px;" href="#" data-toggle="popover" title="Collections" data-trigger="hover" data-content="A logical container used to describe a parent/child level project, experiment, process, or sample." title=" ">what's this?</a></span>	
-				</div>				
+			<div class="form-group colPanel">
+				<img src="4ceeduploader/images/one.jpg" width="50px">
+				<label style="padding-left:10px;">Choose a collection...</label>
+				<span><a style="font-height:12px;" href="#" data-toggle="popover" title="Collections" data-trigger="hover" data-content="A logical container used to describe a parent/child level project, experiment, process, or sample." title=" ">what's this?</a></span>	
+			</div>		
+			<div class="jumbotron"><br />
 				<div class="panel-group" id="accordion1">
 					<div class="panel panel-default">
 						<div class="panel-heading panel-info ">
@@ -135,12 +136,13 @@
 
 		<!-- Dataset --> 
 		<form id="formGetDatasets" class="hidden" method="get" action="">
-		<div class="jumbotron">
-			<div class="form-group dsPanel" >
-				<img src="4ceeduploader/images/two.jpg" width="50px">
-				<label style="padding-left:10px;">Choose a dataset...</label>
-				<span><a style="font-height:12px;" href="#" data-toggle="popover" title="Datasets" data-trigger="hover" data-content="A logical container that describes samples, processes, and techniques that produce meta-data." title=" ">what's this?</a></span>	
-			</div>				
+		<hr />
+		<div class="form-group dsPanel" >
+			<img src="4ceeduploader/images/two.jpg" width="50px">
+			<label style="padding-left:10px;">Choose a dataset...</label>
+			<span><a style="font-height:12px;" href="#" data-toggle="popover" title="Datasets" data-trigger="hover" data-content="A logical container that describes samples, processes, and techniques that produce meta-data." title=" ">what's this?</a></span>	
+		</div>		
+		<div class="jumbotron"><br />
 			<div class="panel-group" id="accordion2">
 				<div class="panel panel-default existingDS">
 					<div class="panel-heading existingDS">
@@ -260,7 +262,7 @@
 												<input type="text" class="form-control datasetDescription" placeholder="<Example> User defined metadata for gold nano particles"><br />
 
 												<label>Create tags to describe your template: (optional)</label> 				
-												<span><a style="font-height:12px;" href="#" data-toggle="popover" title="Template Tags" data-trigger="hover" data-content="Tags allow users to search personal and global templates through descriptive tags." title=" ">
+												<a style="font-height:12px;" href="#" data-toggle="popover" title="Template Tags" data-trigger="hover" data-content="Tags allow users to search personal and global templates through descriptive tags." title=" ">
 												<span class="glyphicon glyphicon-question-sign"></a></span>	
 												<br />
 												<input type="text" class="form-control tagName" placeholder="<Example> SEM, Diffusion" required><br />
@@ -285,7 +287,7 @@
 								    <div class="form-group">
 								    	<div class="showTemplates">
 											<label>Load previous dataset: 											
-												<span><a style="font-height:12px;" href="#" data-toggle="popover" title="Load Previous Datasets" data-trigger="hover" data-content="Create a NEW dataset from one of your previous 10 datasets. Useful for large collections where only one or more values changes each time." title=" ">
+												<a style="font-height:12px;" href="#" data-toggle="popover" title="Load Previous Datasets" data-trigger="hover" data-content="Create a NEW dataset from one of your previous 10 datasets. Useful for large collections where only one or more values changes each time." title=" ">
 												<span class="glyphicon glyphicon-question-sign"></a></span>	
 											</label><br />
 
@@ -325,13 +327,13 @@
 		</form>
 
 		<div id="fileSubmit" class="hidden">
-			<div class="jumbotron ">
-				<div class="form-group">
-					<img src="4ceeduploader/images/three.jpg" width="50px">
-					<label style="padding-left:10px;">Click browse or drag and drop files..</label>
-				</div>
+			<hr />
+			<div class="form-group">
+				<img src="4ceeduploader/images/three.jpg" width="50px">
+				<label style="padding-left:10px;">Click browse or drag and drop files..</label>
+			</div>
+			<div class="jumbotron"><br />				
 				<div id="mulitplefileuploader">Browse</div>
-
 			</div><!-- jumbotron -->
 
 			<div class="form-group">									

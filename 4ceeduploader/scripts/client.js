@@ -611,9 +611,11 @@ function createBoxes(data){
   	//Get current tab and use name to determine what the label will say based on it's tab
 	$.each(data.terms, function(key, val) {
         var div = $("<div />");
-        div.html(createDiv(val.key, val.default_value, val.units, val.data_type));
+        div.html(createDiv(val.key, val.default_value, val.units, val.data_type, val.required));
         $(menuName + ' ' + ".templateData").append(div);
 	}); 
+
+	disableRequiredInput(); 
 
 }
 
@@ -627,9 +629,12 @@ function createBoxesForPreviousDataset(data){
   	
 	$.each(data.template.terms, function(i, val) {
 		var div = $("<div />");
-        div.html(createDiv(val.key, val.default_value, val.units, val.data_type));
+        div.html(createDiv(val.key, val.default_value, val.units, val.data_type, val.required));
 		$("#prevMenu .templateData").append(div);
 	}); 
+
+	disableRequiredInput(); 
+
 
 }
 
@@ -742,6 +747,7 @@ $(".clearMenu").click(function(){
 //Create a new template
 $("#btnTemplate").on('click', function(e) {
 
+	datasetRequireAll(); 
 	datasetRequiredFields(); 
 
 	if ($("#formGetDatasets").valid()){
@@ -1181,10 +1187,29 @@ $(".custMenu, .createMenu, .clearMenu, .prevMenu").on('click', function() {
 	validator.resetForm();
 	$("label.error").hide();
     $(".error").removeClass("error");	
-
 	counter1.reset();
 
 }); 
+
+function disableRequiredInput(){
+
+	 var menuName = $('.nav-tabs .active > a').attr("href");
+	 if (menuName != "#createMenu"){
+
+		$.each($('.requireField'), function(idx){
+
+			var currentId = (this.id);
+			var counter = currentId.match(/\d+/); 
+
+			if ($(this).val() == "true") {
+				$("#btnRemove" + counter).attr("disabled", true);
+			}
+
+			$("#requireField" + counter).attr("disabled", true);
+
+		}); 
+	 }
+}
 
 $("#formGetDatasets").validate();
 
@@ -1203,6 +1228,7 @@ $(".btnDataset").on('click', function(e) {
 		jstreeValid = true; 
 	}
 
+	datasetRequireAll(); 
 	datasetRequiredFields(); 
 
 	if ($("#formGetDatasets").valid() && jstreeValid == true){
@@ -1210,8 +1236,46 @@ $(".btnDataset").on('click', function(e) {
 	}
 });	
 
-function datasetRequiredFields(){
+//If row is required
+function datasetRequireAll(){
 
+	$.each($('.requireField'), function(idx){
+
+		var currentId = (this.id);
+		var counter = currentId.match(/\d+/); 
+
+		if ($(this).val() == "true") {
+			$("#metaDataKey" + counter).rules('add', {
+				required: true, 
+			    maxlength: 50
+			}); 
+			$("#metaDataUnit" + counter).rules('add', {
+				required: true, 
+			    maxlength: 50
+			}); 
+			$("#metaDataType" + counter).rules('add', {
+				required: true, 
+			    maxlength: 50
+			}); 
+			$("#metaDataVal" + counter).rules('add', {
+				required: true, 
+			    maxlength: 50
+			}); 
+
+		}else{
+
+			$("#metaDataKey" + counter).rules("remove", "required"); 
+			$("#metaDataUnit" + counter).rules("remove", "required"); 
+			$("#metaDataType" + counter).rules("remove", "required"); 
+			$("#metaDataVal" + counter).rules("remove", "required"); 
+
+		}
+
+	}); 
+}
+
+//If a value has been added but dependent fields aren't filled out (key, unit, type)
+function datasetRequiredFields(){
 
 		$.each($('.metaDataVal'), function(idx) {
 
@@ -1225,7 +1289,6 @@ function datasetRequiredFields(){
 					required: true, 
 				    maxlength: 50
 				}); 
-						
 
 				var type = $("#metaDataType" + counter + " option:selected").val(); 
 
@@ -1285,6 +1348,7 @@ function buildTemplate(idName) {
     var metaDataVals = $.map($(idName + ' .metaDataVal'), function (el) {return el.value;});
     var metaDataUnits = $.map($(idName + ' .metaDataUnit'), function (el) {return el.value;});
     var metaDataTypes = $.map($(idName + ' .metaDataType'), function (el) {return el.value;});
+    var requireField = $.map($(idName + ' .requireField'), function (el) {return el.value;});
 
     var arr = [];
 
@@ -1295,6 +1359,8 @@ function buildTemplate(idName) {
             objCombined['units'] = metaDataUnits[idx];;
             objCombined['data_type'] = metaDataTypes[idx];;
             objCombined['default_value'] = metaDataVals[idx];
+            objCombined['required'] = requireField[idx];
+
             arr.push(objCombined);
         }
     });
@@ -1372,7 +1438,7 @@ $(function () {
 		$(".existingDS").show(); 
 		$(".btnDataset").show();
 		$("#btnTemplate").show();
-
+		disableRequiredInput(); 
         //Call autocomplete on dynamically created textbox after it's created
 		$(".metaDataKey").autocomplete({ 
 			source:metaDataTags
@@ -1419,31 +1485,39 @@ function counter() {
 var counter1 = new counter();
 
 //Create dynamic textbox
-function createDiv(keyName, val, units, dataType) {
+function createDiv(keyName, val, units, dataType, requireField) {
     var valKeyName = $.trim(keyName);
     var valStr = $.trim(val);
     var valUnits = $.trim(units);
     var valType = $.trim(dataType);
+    var requireField = $.trim(requireField);
+
+    if (requireField == ""){
+    	requireField = "false";
+    }
   	var menuName = $('.nav-tabs .active > a').attr("href");
 
   	//format text 
     var txtToWrite = "";
+
     if (menuName == "#createMenu"){
-    	txtToWrite = "Default Value: (optional)";
+    	txtToWrite = "Optional Value:";
     }else{
-    	txtToWrite = "Default Value: "
+    	txtToWrite = "Value: "
     }
 
 	var i = counter1.add();    
-	console.log(i);
     var txtString = dataType == "string" ? "<option value='string' selected>String</option>" : "<option value='string'>String</option>"; 
     var txtNumber = dataType == "number" ? "<option value='number' selected>Number</option>" : "<option value='number'>Number</option>"; 
     var txtBoolean = dataType == "boolean" ? "<option value='boolean' selected>Boolean</option>" : "<option value='boolean'>Boolean</option>"; 
 
-    return '<div class="row top-buffer"><div class="col-xs-4"><b>' + "<label for='name'>Name: " + '</label></b></span>' +
+    var txtTrue = requireField == "true" ? "<option value='true' selected>Yes</option>" : "<option value='true'>Yes</option>"; 
+    var txtFalse = requireField == "false" ? "<option value='false' selected>No</option>" : "<option value='false'>No</option>"; 
+
+    return '<div class="row top-buffer"><div class="col-xs-3"><b>' + "<label for='name'>Name: " + '</b></label>' +
         '<input class="metaDataKey form-control" name="metaDataKey' + i + '" id="metaDataKey' + i + '" type="text" value=' + valKeyName.replace(/ /g,"&nbsp;") +'></div>' +
 
-        '<div class="col-xs-2"><b>' + "<label for='name'>Unit Type: " + '</label></b></span>' +
+        '<div class="col-xs-2"><b>' + "<label for='name'>Unit Type: " + '</label></b>' +
         '<input class="metaDataUnit form-control" name="metaDataUnit' + i + '" id="metaDataUnit' + i + '" type="text" value=' + valUnits.replace(/ /g,"&nbsp;") +'></div>' +
 
         '<div class="col-xs-2" style=""><b>' + "<label for='val'>Data Type: " + '</label></b>' +
@@ -1453,21 +1527,24 @@ function createDiv(keyName, val, units, dataType) {
         '' + txtBoolean + '' + 
         '</select></div>' +
 
-        '<div class="col-xs-3" style="margin-left:-15px;"><b>' + "<label for='val'>"+ txtToWrite + '</label></b>' +
+        '<div class="col-xs-2" style="margin-left:-15px;"><b>' + "<label for='val'>"+ txtToWrite + '</b></label>' +
         '<input class="metaDataVal form-control" name="metaDataVal' + i + '" id="metaDataVal' + i + '" type="text" value=' + valStr.replace(/ /g,"&nbsp;") +'></div>' +
 
-        '<div class="col-xs-1" style="margin-left:-15px;"><b>' + "<label for='val'>&nbsp;" + '</label></b>' +
-        '<input type="button" value="Remove" class="remove btn btn-danger"></div></div>'
+        '<div class="col-xs-2" style="margin-left:-15px;"><b>' + "<label for='val'>Required: " + '</label></b>' +
+        '<select class="requireField form-control" name="requireField' + i + '" id="requireField' + i + '" >' +
+        '' + txtTrue + '' + 
+        '' + txtFalse + '' + 
+        '</select></div>' +
 
+        '<div class="col-xs-1" style="margin-left:-15px;"><b>' + "<label for='val'>&nbsp;" + '</label></b>' +
+        '<input type="button" value="Remove" class="remove btn btn-danger btnRemove" name="btnRemove' + i + '" id="btnRemove' + i + '"></div></div>'
+        
 }
 
 $.validator.addMethod("equals", function(value, element, string) {
     return $.inArray(value, string) !== -1;
 }, $.validator.format("Please enter {0} or {1}"));
 
-// $.validator.setDefaults({
-//     ignore: ""
-// });
 
 
 
