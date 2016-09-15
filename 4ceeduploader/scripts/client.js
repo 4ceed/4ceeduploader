@@ -1290,8 +1290,6 @@ function datasetRequiredFields(){
 				    maxlength: 50
 				}); 
 
-				var type = $("#metaDataType" + counter + " option:selected").val(); 
-
 				$("#metaDataUnit" + counter).each(function () {
 				    $(this).rules('add', {
 				        required: true, 
@@ -1327,6 +1325,8 @@ function datasetRequiredFields(){
 						$(this).rules('add', {
 							maxlength: 50
 						}); 
+					    $(this).rules('remove',"number");
+					    $(this).rules('remove',"equals");
        					break;
 
 				}
