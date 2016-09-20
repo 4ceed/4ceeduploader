@@ -956,6 +956,7 @@ function postDatasets() {
 				 var templateLength = ($(menuName + " .templates option").length);
 				 var globalTemplateLength = ($(menuName + " .globalTemplates option").length);
 				 var tagTemplateLength = ($(menuName + " .tagTemplates option").length);
+				 
 				 if ($(templateLength > 1)){
 				 	selectedMenu = " .templates";
 				 }else if ($(globalTemplateLength > 1)){
@@ -980,7 +981,6 @@ function postDatasets() {
 			     $(".prevOptions").hide(); 
 				 $('.datasetName').val('');			 
 				 $('.nav-tabs a:first').tab('show')
-
 
 				}
 		}, 
