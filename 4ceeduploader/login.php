@@ -96,9 +96,9 @@
 				// var homeURL = "http://127.0.0.1:8888/4ceeduploader";
 			
 				//REMOTE
-				var clowderURL = "https://4ceed.illinois.edu/api/"; 
-				var baseURL = "https://4ceed.illinois.edu/"; 
-				var homeURL = "https://4ceed.illinois.edu/4ceeduploader"; 
+				var clowderURL = "http://192.17.237.26:32500/api/"; 
+				var baseURL = "http://192.17.237.26:32500/"; 
+				var homeURL = "http://192.17.237.26:32001/4ceeduploader/"; 
 			
 				var username = $("#username").val(); 
 				var password = $("#password").val(); 
