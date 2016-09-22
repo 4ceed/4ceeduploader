@@ -1,6 +1,11 @@
 <?php
 	session_start();
 
+	# Obtain system environment variables:
+	$clowderURL = getenv('CURATOR_API_URL');
+	$baseURL = getenv('CURATOR_HOME');
+	$homeURL = getenv('UPLOADER_HOME');
+
 	header('Access-Control-Allow-Origin: *'); 
 	header('Access-Control-Allow-Methods: GET, PUT, POST, DELETE, OPTIONS');
 	header('Access-Control-Allow-Methods: Content-Type');
@@ -96,9 +101,9 @@
 				// var homeURL = "http://127.0.0.1:8888/4ceeduploader";
 			
 				//REMOTE
-				var clowderURL = "http://192.17.237.26:32500/api/"; 
-				var baseURL = "http://192.17.237.26:32500/"; 
-				var homeURL = "http://192.17.237.26:32001/4ceeduploader/"; 
+				var clowderURL = "<?= $clowderURL ?>"; 
+				var baseURL = "<?= $baseURL ?>";
+				var homeURL = "<?= $homeURL ?>";
 			
 				var username = $("#username").val(); 
 				var password = $("#password").val(); 
