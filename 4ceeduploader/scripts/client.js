@@ -1181,7 +1181,7 @@ $("#btnSubmit").on('click', function() {
 
 });	
 
-//Removes previos error messages when a new tab is selected
+//Removes previous error messages when a new tab is selected
 $(".custMenu, .createMenu, .clearMenu, .prevMenu").on('click', function() {
 	var validator = $("#formGetDatasets").validate();
 	validator.resetForm();
@@ -1191,6 +1191,7 @@ $(".custMenu, .createMenu, .clearMenu, .prevMenu").on('click', function() {
 
 }); 
 
+//Used to disable inputs in loaded template that are required
 function disableRequiredInput(){
 
 	 var menuName = $('.nav-tabs .active > a').attr("href");
@@ -1254,10 +1255,6 @@ function datasetRequireAll(){
 			    maxlength: 50
 			}); 
 			$("#metaDataType" + counter).rules('add', {
-				required: true, 
-			    maxlength: 50
-			}); 
-			$("#metaDataVal" + counter).rules('add', {
 				required: true, 
 			    maxlength: 50
 			}); 
@@ -1429,16 +1426,15 @@ $(function () {
   		var menuName = $('.nav-tabs .active > a').attr("href");
 
         div.html(createDiv(" "));
-		// $("#prevMenu .templateData").append(div);
 
 
-		//Future: check and see if any classes with this value exist already before making another input
         $(menuName + " .metaDataSettings").append(div);
 		$(".metaDataKey").first().focus(); 
 		$(".existingDS").show(); 
 		$(".btnDataset").show();
 		$("#btnTemplate").show();
 		disableRequiredInput(); 
+
         //Call autocomplete on dynamically created textbox after it's created
 		$(".metaDataKey").autocomplete({ 
 			source:metaDataTags
