@@ -635,7 +635,6 @@ function createBoxesForPreviousDataset(data){
 
 	disableRequiredInput(); 
 
-
 }
 
 function clearTemplate(){
@@ -1203,7 +1202,10 @@ function disableRequiredInput(){
 			var counter = currentId.match(/\d+/); 
 
 			if ($(this).val() == "true") {
-				$("#btnRemove" + counter).attr("disabled", true);
+				$("#btnRemove" + counter).attr("disable", true);
+				$("#metaDataUnit" + counter).attr("disable", true); 
+				$("#metaDataType" + counter).attr("disable", true); 
+				$("#metaDataKey" + counter).attr("disable", true); 
 			}
 
 			$("#requireField" + counter).attr("disabled", true);
@@ -1233,7 +1235,6 @@ $(".btnDataset").on('click', function(e) {
 	datasetRequiredFields(); 
 
 	if ($("#formGetDatasets").valid() && jstreeValid == true){
-		postDatasets(e); 
 	}
 });	
 
@@ -1242,9 +1243,10 @@ function datasetRequireAll(){
 
 	$.each($('.requireField'), function(idx){
 
+	 var menuName = $('.nav-tabs .active > a').attr("href");
+
 		var currentId = (this.id);
 		var counter = currentId.match(/\d+/); 
-
 		if ($(this).val() == "true") {
 			$("#metaDataKey" + counter).rules('add', {
 				required: true, 
@@ -1258,7 +1260,14 @@ function datasetRequireAll(){
 				required: true, 
 			    maxlength: 50
 			}); 
+	 		
+	 		if (menuName != "#createMenu"){
 
+				$("#metaDataVal" + counter).rules('add', {
+					required: true, 
+				    maxlength: 50
+				}); 
+			}
 		}else{
 
 			$("#metaDataKey" + counter).rules("remove", "required"); 
@@ -1491,6 +1500,8 @@ function createDiv(keyName, val, units, dataType, requireField) {
     if (requireField == ""){
     	requireField = "false";
     }
+
+    console.log(requireField);
   	var menuName = $('.nav-tabs .active > a').attr("href");
 
   	//format text 
