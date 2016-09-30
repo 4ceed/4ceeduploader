@@ -17,7 +17,7 @@
 		<meta http-equiv="X-UA-Compatible" content="IE=edge">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
-		<title>T2C2</title>
+		<title>4CeeD</title>
 
 		<!-- Bootstrap -->
 		<link rel="stylesheet" href="bootstrap/css/bootstrap.min.css">
@@ -50,7 +50,7 @@
 				<span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
 				<span class="sr-only">Error:</span>
 				User not authorized. <br />
-				Please create an account, or reset your password in the 4CeeD <a href="https://4ceed.illinois.edu">curator.</a>
+				Please create an account, or reset your password in the 4CeeD <a href="<?= $baseURL ?>">curator.</a>
 			</div>				
 			<div class="jumbotron">
 				<form method="" id="formLogin" action="">
@@ -68,6 +68,11 @@
 						</div>		
 					</div>
 				</form>
+				<hr />
+				<div class="form-group">
+					<h5 style="text-align:center;">Don't have an account? <a href="<?= $baseURL ?>/signup">Sign up.</a></h5>
+				</div>
+
 			</div>
 			<footer class="footer">
 			</footer>
