@@ -1206,12 +1206,15 @@ function disableRequiredInput(){
 				$("#metaDataUnit" + counter).attr("disabled", true); 
 				$("#metaDataType" + counter).attr("disabled", true); 
 				$("#btnRemove" + counter).attr("disabled", true);
+				$("#requireField" + counter).attr("disabled", true);
+
 			}
 
 			$("#requireField" + counter).attr("disabled", true);
-			$("#metaDataKey" + counter).attr("disabled", true);
-			$("#metaDataUnit" + counter).attr("disabled", true);
-			$("#metaDataType" + counter).attr("disabled", true);
+
+			// $("#metaDataKey" + counter).attr("disabled", true);
+			// $("#metaDataUnit" + counter).attr("disabled", true);
+			// $("#metaDataType" + counter).attr("disabled", true);
 
 		}); 
 	 }
