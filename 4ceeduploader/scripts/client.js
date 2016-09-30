@@ -1202,13 +1202,16 @@ function disableRequiredInput(){
 			var counter = currentId.match(/\d+/); 
 
 			if ($(this).val() == "true") {
-				$("#btnRemove" + counter).attr("disable", true);
-				$("#metaDataUnit" + counter).attr("disable", true); 
-				$("#metaDataType" + counter).attr("disable", true); 
-				$("#metaDataKey" + counter).attr("disable", true); 
+				$("#metaDataKey" + counter).attr("disabled", true); 
+				$("#metaDataUnit" + counter).attr("disabled", true); 
+				$("#metaDataType" + counter).attr("disabled", true); 
+				$("#btnRemove" + counter).attr("disabled", true);
 			}
 
 			$("#requireField" + counter).attr("disabled", true);
+			$("#metaDataKey" + counter).attr("disabled", true);
+			$("#metaDataUnit" + counter).attr("disabled", true);
+			$("#metaDataType" + counter).attr("disabled", true);
 
 		}); 
 	 }
@@ -1243,7 +1246,7 @@ function datasetRequireAll(){
 
 	$.each($('.requireField'), function(idx){
 
-	 var menuName = $('.nav-tabs .active > a').attr("href");
+		var menuName = $('.nav-tabs .active > a').attr("href");
 
 		var currentId = (this.id);
 		var counter = currentId.match(/\d+/); 
