@@ -70,7 +70,7 @@
 				</form>
 				<hr />
 				<div class="form-group">
-					<h5 style="text-align:center;">Don't have an account? <a href="<?= $baseURL ?>/signup">Sign up.</a></h5>
+					<h5 style="text-align:center;">Don't have an account? <a href="<?= $baseURL ?>signup">Sign up.</a></h5>
 				</div>
 
 			</div>
