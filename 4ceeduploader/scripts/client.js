@@ -1241,6 +1241,8 @@ $(".btnDataset").on('click', function(e) {
 	datasetRequiredFields(); 
 
 	if ($("#formGetDatasets").valid() && jstreeValid == true){
+		postDatasets(e); 
+
 	}
 });	
 
