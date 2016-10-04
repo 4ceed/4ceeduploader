@@ -86,3 +86,31 @@
 .popover-title{
     background: #dbeaf5;
 }
+
+
+.navbar-brand {
+  font-color:white;
+}
+
+.navbar {
+  margin-bottom: 0;
+  border-radius: 0;
+}
+
+.icons_pad {
+  margin-top:50px;
+}
+
+.navbar-header {
+  text-align: center;
+}
+
+.navbar-brand {
+  float:none;
+}
+
+.navbar-custom1 .nav > li > a:focus,
+.navbar-custom1 .nav > li > a:hover,
+.navbar-custom1 .nav > li.active > a {
+  background-color: #11bb11;
+}

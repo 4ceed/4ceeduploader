@@ -44,21 +44,27 @@
 
 	</head>
 	<body>
-
+	<div class="header clearfix">
+	<nav class="navbar navbar-inverse navbar-custom1">
+		<div class="container-fluid">
+			<div class="navbar-header">
+			   	<a href="index.php" class="" ><img src="images/atom_white.png" height="40" style="margin-top:5px;"></a> 
+			</div>
+			<ul class="nav navbar-nav navbar-right">
+				<li role="presentation" class="active"><a href="uploader.php">Uploader</a></li>
+				<li><a href="faq.php">FAQ</a></li>
+				<li><a href="logout.php"><span class="glyphicon glyphicon-log-in"></span> Logout</a></li>
+			</ul>				
+		</div>
+	</nav>
+	</div>
 	<div class="container">
+	<br />
+		<h5 class="text-muted username"></h5>
+		<h5 class="text-muted logout error"></h5>
+		<h5 class="text-muted timer error"></h5>
+		<hr />
 
-		<div class="header clearfix">
-			<nav>
-				<ul class="nav nav-pills pull-right">
-<!-- 					<li role="presentation" class="active"><a href="faq.php">FAQ</a></li>
- -->					<li role="presentation"><a href="logout.php">Logout</a></li>
-				</ul>
-			</nav>
- 			<h3 class="text-muted username"></h3>
- 			<h5 class="text-muted logout error"></h5>
- 			<h5 class="text-muted timer error"></h5>
- 			<hr />
- 		</div>
 		<!-- dialog window markup -->
 		<div id="dialog" title="Your session is about to expire!" class="hidden">
 			<p>
@@ -341,8 +347,8 @@
 			</div>
 		</div>
 		<footer class="footer">
-			<p>4CeeD - 2015</p>
-		</footer>
+<!-- 			<p>4CeeD - 2015</p>
+ -->		</footer>
 	</div><!-- container --> 
 
 	<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
