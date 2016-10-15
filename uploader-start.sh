@@ -28,6 +28,11 @@ update_conf   "CURATOR_HOME" "$CURATOR_HOME"
 update_conf   "CURATOR_API_URL" "$CURATOR_API_URL"
 update_conf   "UPLOADER_HOME" "$UPLOADER_HOME"
 
-# Start uploader 
+# Update env variables
 source uploader.conf
-php -S 0.0.0.0:8000
+export CURATOR_HOME
+export CURATOR_API_URL
+export UPLOADER_HOME
+
+# Start uploader 
+php -S 0.0.0.0:8001
