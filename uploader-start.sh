@@ -23,16 +23,17 @@ function update_conf() {
     fi
 }
 
-# Set configuration information 
+# If env variables exist, reset configuration information 
 update_conf   "CURATOR_HOME" "$CURATOR_HOME"
 update_conf   "CURATOR_API_URL" "$CURATOR_API_URL"
 update_conf   "UPLOADER_HOME" "$UPLOADER_HOME"
 
-# Update env variables
+# If env variables do not exist, or if you are running in 
+# local mode, load env variables from configuration file
 source uploader.conf
 export CURATOR_HOME
 export CURATOR_API_URL
 export UPLOADER_HOME
 
 # Start uploader 
-php -S 0.0.0.0:8001
+php -S 0.0.0.0:8000

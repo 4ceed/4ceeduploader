@@ -1,6 +1,8 @@
 4CeeD Uploader
 =====
 
+These are the instructions to run only 4CeeD Uploader. To setup the whole 4CeeD software suite, please use the [4CeeD Framework](https://github.com/4ceed/4ceedframework) repository.
+
 ## Prerequisites
 - PHP (5.5 or later)
 - Docker (to build Docker image, 1.9.1 or later)
